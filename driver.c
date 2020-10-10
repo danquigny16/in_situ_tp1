@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "util.h"
 
@@ -73,14 +74,53 @@ void test_initialisation(){
   printf("\n");
 }
 
+/**
+Fait les tests relatifs au produit scalaire my_ddot
+*/
+void test_my_ddot(){
+  // Nom du test
+  printf("*************** TEST PRODUIT SCALAIRE : MY_DDOT() ***************\n\n");
+
+  // Initialisation des variables
+  int m = 50;
+  clock_t debut, fin;
+
+  while (m < 1000000){
+    // Déclaration de deux vecteurs de taille m
+    double * vec1 = vecteur(m);
+    double * vec2 = vecteur(m);
+
+    // Produit scalaire
+    debut = clock();
+    my_ddot(m, vec1, 1, vec2, 1);
+    fin = clock();
+
+    // Affichage du temps nécessaire
+    double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    printf("Temps CPU pour des vecteurs de taille %d : %f s\n", m, temps);
+
+    // Libération mémoire des précédents vecteurs
+    free_vecteur(vec1);
+    free_vecteur(vec2);
+
+    // Increment de m de 25%
+    int increment = m / 4;
+    m += increment;
+  }
+
+  // Fin du test
+  printf("\n");
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Main
 
 // gcc -Wall -Wextra -std=c99 cblas.h util.h util.c driver.c -o test
-int main (/*int argc, char ** argv*/){
+int main(/*int argc, char ** argv*/){
   test_alloc_et_free();
   test_initialisation();
+  test_my_ddot();
 
   return 0;
 }
