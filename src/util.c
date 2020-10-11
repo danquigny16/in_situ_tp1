@@ -157,3 +157,51 @@ double my_ddot(const int N, const double *X, const int incX, const double *Y, co
 
   return res;
 }
+
+/**
+Effectue : C <- alpha * A * B + beta * C
+Avec les tailles : -A : m*k
+                   -B : k*n
+                   -C : m*n
+@param Order : Indique si les matrices A, B et C sont stocké en CblasRowMajor ou en CblasColMajor
+@param TransA : Indique si on doit prendre la matrice A tel quel ou sa transposé
+@param TransB : Indique si on doit prendre la matrice B tel quel ou sa transposé
+@param M : nombre de ligne de A / nombre de ligne de C
+@param N : nombre de colonne de B / nombre de colonne de C
+@param K : nombre de colonne de A / nombre de ligne de B
+@param alpha : voir formule
+@param A : voir formule
+@param lda : leading dimension de A
+@param B : voir formule
+@param ldb : leading dimension de B
+@param beta : voir formule
+@param C : voir formule
+@param ldc : leading dimension de C
+*/
+void my_dgemm_scalaire(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB,
+                       const int M, const int N, const int K,
+                       const double alpha, const double *A, const int lda, const double *B, const int ldb, const double beta, double *C, const int ldc){
+  //////////////////////////////////////////////////////////////////////////////
+  // Pour cette fonction on suppose dans l'énoncé qu'on est en CblasColMajor, qu'on prend la transposé de A,
+  // qu'on laisse B tel quel, que l'on manipule des matrices carrés m*m, que alpha vaut 1 et beta 0,
+  // qu
+  if (Order != CblasColMajor || TransA != CblasTrans || TransB != CblasNoTrans || M != N || N != K || alpha != 1 || beta != 0){
+    printf("erreur dans \"my_dgemm_scalaire\" : condition de l'énoncé non respecté");
+    exit(0);
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  // On effectue le produit et la somme de matrices (alpha * tA) * B + (beta * C)
+  for (int i = 0; i < M; i++){
+    for (int k = 0; k < M; k++){
+      for (int j = 0; j < M; j++){
+        // C = A * B
+        // C[i + j * ldc] += A[i + k * lda] * B[k + j * ldb];
+        // tA(i, j) = A(j, i)
+        // C = tA * b
+        //C[i + j * ldc] += A[k + i * lda] * B[k + j * ldb];
+        C[i + j * ldc] += A[k + i * lda] * B[k + j * ldb];
+      }
+    }
+  }
+}

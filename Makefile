@@ -44,15 +44,15 @@ graphe: driver
 .PHONY: clean clean_graphe clean_data clean_exec clean_all
 
 clean:
-	@rm $(BUILD)/*.o
+	@rm -f $(BUILD)/*.o
 
 clean_graphe:
-	@rm $(GRAPHE)/*.png
+	@rm -f $(GRAPHE)/*.png
 
 clean_data:
-	@rm donnees_graphe.txt
+	@rm -f donnees_graphe.txt
 
 clean_exec: clean
-	@rm test
+	@rm -f test
 
 clean_all: clean_graphe clean_data clean_exec

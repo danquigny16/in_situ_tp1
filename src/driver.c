@@ -75,7 +75,7 @@ void test_initialisation(){
 }
 
 /**
-Fait les tests relatifs au produit scalaire my_ddot
+Fait les tests relatifs au produit scalaire my_ddot()
 */
 void test_my_ddot(){
   // Nom du test
@@ -114,6 +114,42 @@ void test_my_ddot(){
   printf("\n");
 }
 
+/**
+Fait les tests relatifs au produit de matrices my_dgemm_scalaire()
+*/
+void test_my_dgemm_scalaire(){
+  // Nom du test
+  printf("*************** TEST PRODUIT DE MATRICES : MY_DGEMM_SCALAIRE() ***************\n\n");
+
+  // Allocation matrice
+  double * A = matrice(5, 5);
+  double * B = matrice(5, 5);
+  double * C = matrice(5, 5);
+
+  // Initialisation des matrice A et B
+  init_matrice(5, 5, 5, A);
+  init_matrice(5, 5, 5, B);
+
+  // Test de dgemm pour la calcul de tA * B
+  my_dgemm_scalaire(CblasColMajor, CblasTrans, CblasNoTrans, 5, 5, 5, 1, A, 5, B, 5, 0, C, 5);
+
+  // Affichage des matrices
+  printf("----- Matrice A -----\n\n");
+  affiche(5, 5, A, 5, stdout);
+  printf("\n----- Matrice B -----\n\n");
+  affiche(5, 5, B, 5, stdout);
+  printf("\n----- Matrice C -----\n\n");
+  affiche(5, 5, C, 5, stdout);
+
+  // Libération mémoire
+  free_matrice(A);
+  free_matrice(B);
+  free_matrice(C);
+
+  // Fin du test
+  printf("\n");
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Main
@@ -122,6 +158,7 @@ int main(/*int argc, char ** argv*/){
   test_alloc_et_free();
   test_initialisation();
   test_my_ddot();
+  test_my_dgemm_scalaire();
 
   return 0;
 }
