@@ -20,5 +20,5 @@ make clean_all : efface l'exécutable, les fichiers objets, les fichiers contena
 ### Architecture
 
 build : contient les fichiers objets
-graphe : contient les graphes qu'on trace
+graphe : contient les graphes qu'on trace 
 src : contient nos sources
