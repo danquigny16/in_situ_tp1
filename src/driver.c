@@ -13,7 +13,9 @@ Fait les tests relatifs aux allocation et libération mémoire de matrices et de
 */
 void test_alloc_et_free(){
   // Nom du test
+  printf("**************************************************\n");
   printf("*************** TEST ALLOC ET FREE ***************\n");
+  printf("**************************************************\n");
 
   // Matrice
   printf("\n----- Matrice -----\n\n");
@@ -39,7 +41,9 @@ Fait les tests relatifs aux initialisations de matrices et de vecteurs
 */
 void test_initialisation(){
   // Nom du test
+  printf("***************************************************\n");
   printf("*************** TEST INITIALISATION ***************\n");
+  printf("***************************************************\n");
 
   // Matrice
   printf("\n----- Matrice -----\n\n");
@@ -79,7 +83,9 @@ Fait les tests relatifs au produit scalaire my_ddot()
 */
 void test_my_ddot(){
   // Nom du test
-  printf("*************** TEST PRODUIT SCALAIRE : MY_DDOT() ***************\n\n");
+  printf("*******************************************************************\n");
+  printf("*************** TEST PRODUIT SCALAIRE : MY_DDOT() *****************\n");
+  printf("*******************************************************************\n\n");
 
   // Initialisation des variables
   int m = 50;
@@ -119,7 +125,9 @@ Fait les tests relatifs au produit de matrices my_dgemm_scalaire()
 */
 void test_my_dgemm_scalaire(){
   // Nom du test
-  printf("*************** TEST PRODUIT DE MATRICES : MY_DGEMM_SCALAIRE() ***************\n\n");
+  printf("******************************************************************************\n");
+  printf("*************** TEST PRODUIT DE MATRICES : MY_DGEMM_SCALAIRE() ***************\n");
+  printf("******************************************************************************\n\n");
 
   // Allocation matrice
   double * A = matrice(5, 5);

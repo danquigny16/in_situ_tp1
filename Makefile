@@ -19,7 +19,7 @@ GRAPHE=graphe
 all: driver
 
 driver: $(BUILD)/driver.o $(BUILD)/util.o
-	$(CC) $(CFLAGS) $^ -o test
+	$(CC) $(CFLAGS) $^ -o driver
 
 $(BUILD)/driver.o: $(SRC_DIR)/driver.c
 	$(CC) $(CFLAGS) -c $^ -o $@
@@ -32,7 +32,7 @@ $(BUILD)/util.o: $(SRC_DIR)/util.c
 #partie exécution
 
 test: driver
-	@./test
+	@./driver
 
 graphe: driver
 	@./graphe.sh
