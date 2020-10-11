@@ -1,1 +1,6 @@
 test
+donnees_graphe.txt
+graphe/*
+!graphe/.gitkeep
+build/*
+!build/.gitkeep
