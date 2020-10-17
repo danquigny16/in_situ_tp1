@@ -205,3 +205,45 @@ void my_dgemm_scalaire(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE 
     }
   }
 }
+
+///////////////////////////////////////////////////////////////////
+// On effectue l'opération Y = Y + alpha*X avec X et Y des vecteurs
+void my_cblas_daxpy(const int N, const double alpha, const double *X,
+                 const int incX, double *Y, const int incY){
+  for(int i = 0; i < N; ++i){
+    Y[i*incY] += alpha * X[i*incX];
+  }
+}
+
+/////////////////////////////////////////////////////////////////////
+// On effectue l'opération Y = Y + A * X avec Y et X des vecteurs et A une matrice
+// ne tiens pas compte pour l'instant de alpha et beta
+void my_cblas_dgemv(const enum CBLAS_ORDER order,
+                 const enum CBLAS_TRANSPOSE TransA, const int M, const int N,
+                 const double alpha, const double *A, const int lda,
+                 const double *X, const int incX, const double beta,
+                 double *Y, const int incY){
+  if (Order != CblasColMajor || TransA != CblasTrans){
+    printf("erreur dans \"my_cblas_dgemv\" : condition de l'énoncé non respecté");
+    exit(0);
+  }
+  for(int i=0; i<M; i++){
+    for(int j=0; j<M; j++){
+      Y[i*incY] += A[i+j*lda] * X[j*incX];
+    }
+  }
+}
+
+void my_cblas_dger(const enum CBLAS_ORDER order, const int M, const int N,
+                const double alpha, const double *X, const int incX,
+                const double *Y, const int incY, double *A, const int lda){
+  if (Order != CblasColMajor){
+    printf("erreur dans \"my_cblas_dger\" : condition de l'énoncé non respecté");
+    exit(0);
+  }
+  for(int i=0; i<M; i++){
+    for(int j=0; j<N; j++){
+      A[i+j*lda] += alpha * X[i*incX] * Y[j*incY];
+    }
+  }
+}
