@@ -406,20 +406,23 @@ void my_dgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, c
 
   // on définit une taille de bloc pour le produit de matrice par bloc, en supposant M multiple de bloc_size
   // sinon pb avec my_dgemm_scalaire, qui doit prendre des matrices carrés
-  int bloc_size = 10;
+  int bloc_size = 5;
 
   //////////////////////////////////////////////////////////////////////////////
   // On effectue le produit et la somme de matrices (alpha * tA) * B + (beta * C)
   // i parcourt les lignes de tA (donc les colonnes de A)
   // j les colonnes de B
   // k les lignes de B (et les colonnes de tA donc les lignes de A)
+  // C = A * B ---> C[i + j * ldc] += A[i + k * lda] * B[k + j * ldb];
+  // tA(i, j) = A(j, i)
+  // C = tA * b ---> C[i + j * ldc] += A[k + i * lda] * B[k + j * ldb];
   for (int i = 0; i < M; i += bloc_size){
     for (int j = 0; j < M; j += bloc_size){
       for (int k = 0; k < M; k += bloc_size){
-        // C = A * B ---> C[i + j * ldc] += A[i + k * lda] * B[k + j * ldb];
-        // tA(i, j) = A(j, i)
-        // C = tA * b ---> C[i + j * ldc] += A[k + i * lda] * B[k + j * ldb];
-        my_dgemm_scalaire(Order, TransA, TransB, bloc_size, bloc_size, bloc_size, alpha, A, lda, B, ldb, beta, C, ldc);
+        const double *NEW_A = A + (k + i * lda);
+        const double *NEW_B = B + (k + j * ldb);
+        double *NEW_C = C + (i + j * ldc);
+        my_dgemm_scalaire(Order, TransA, TransB, bloc_size, bloc_size, bloc_size, alpha, NEW_A, lda, NEW_B, ldb, beta, NEW_C, ldc);
       }
     }
   }
@@ -432,8 +435,7 @@ void my_dgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, c
 
 ///////////////////////////////////////////////////////////////////
 // On effectue l'opération Y = Y + alpha*X avec X et Y des vecteurs
-void my_cblas_daxpy(const int N, const double alpha, const double *X,
-                 const int incX, double *Y, const int incY){
+void my_cblas_daxpy(const int N, const double alpha, const double *X, const int incX, double *Y, const int incY){
   for(int i = 0; i < N; ++i){
     Y[i*incY] += alpha * X[i*incX];
   }
@@ -497,8 +499,7 @@ int my_dgetf2(const enum CBLAS_ORDER Order, int m, int n, double* a, int lda){
 
 //////////////////////////////////////////////////////////////////////////////
 // Résolution de système triangulaire LX = B
-void my_cblas_dtrsm(const enum CBLAS_ORDER Order, const int M, const int N,
-                 const double *A, const int lda, double *B, const int ldb){
+void my_cblas_dtrsm(const enum CBLAS_ORDER Order, const int M, const int N, const double *A, const int lda, double *B, const int ldb){
   if (Order != CblasColMajor){
     printf("erreur dans \"my_cblas_dtrsm\" : condition de l'énoncé non respecté");
     exit(0);
@@ -516,8 +517,7 @@ void my_cblas_dtrsm(const enum CBLAS_ORDER Order, const int M, const int N,
 
 //////////////////////////////////////////////////////////////////////////
 // résolution de système linéaire A*X = B
-void my_cblas_dgesv(const enum CBLAS_ORDER Order, const int N, double *A,
-   const int lda, double *B, const int ldb){
+void my_cblas_dgesv(const enum CBLAS_ORDER Order, const int N, double *A, const int lda, double *B, const int ldb){
      if (Order != CblasColMajor){
        printf("erreur dans \"my_cblas_dtrsm\" : condition de l'énoncé non respecté");
        exit(0);
