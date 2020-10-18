@@ -205,3 +205,96 @@ void my_dgemm_scalaire(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE 
     }
   }
 }
+
+///////////////////////////////////////////////////////////////////
+// On effectue l'opération Y = Y + alpha*X avec X et Y des vecteurs
+void my_cblas_daxpy(const int N, const double alpha, const double *X,
+                 const int incX, double *Y, const int incY){
+  for(int i = 0; i < N; ++i){
+    Y[i*incY] += alpha * X[i*incX];
+  }
+}
+
+/////////////////////////////////////////////////////////////////////
+// On effectue l'opération Y = Y + A * X avec Y et X des vecteurs et A une matrice
+// ne tiens pas compte pour l'instant de alpha et beta
+void my_cblas_dgemv(const enum CBLAS_ORDER order,
+                 const enum CBLAS_TRANSPOSE TransA, const int M, const int N,
+                 const double alpha, const double *A, const int lda,
+                 const double *X, const int incX, const double beta,
+                 double *Y, const int incY){
+  if (order != CblasColMajor || TransA != CblasTrans){
+    printf("erreur dans \"my_cblas_dgemv\" : condition de l'énoncé non respecté");
+    exit(0);
+  }
+  for(int i=0; i<M; i++){
+    for(int j=0; j<M; j++){
+      Y[i*incY] += A[i+j*lda] * X[j*incX];
+    }
+  }
+}
+
+////////////////////////////////////////////////////////////////////////
+// On effectue l'opération A = A + alpha * X * tY avec A une matrice et X et Y des vecteurs
+void my_cblas_dger(const enum CBLAS_ORDER order, const int M, const int N,
+                const double alpha, const double *X, const int incX,
+                const double *Y, const int incY, double *A, const int lda){
+  if (order != CblasColMajor){
+    printf("erreur dans \"my_cblas_dger\" : condition de l'énoncé non respecté");
+    exit(0);
+  }
+  for(int i=0; i<M; i++){
+    for(int j=0; j<N; j++){
+      A[i+j*lda] += alpha * X[i*incX] * Y[j*incY];
+    }
+  }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Factorisation LU de la matrice a
+int my_dgetf2(const enum CBLAS_ORDER Order, int m, int n, double* a, int lda){
+  if (Order != CblasColMajor){
+    printf("erreur dans \"my_cblas_dger\" : condition de l'énoncé non respecté");
+    exit(0);
+  }
+  for(int i=0; i<m; i++){
+    for(int j=i+1; j<n; j++){
+      a[j+i*lda] /= a[i+i*lda];
+      for(int k=i+1; k<n; k++){
+        a[j+k*lda] -= a[j+i*lda] * a[i+k*lda];
+      }
+    }
+  }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// Résolution de système triangulaire LX = B
+void my_cblas_dtrsm(const enum CBLAS_ORDER Order, const int M, const int N,
+                 const double *A, const int lda, double *B, const int ldb){
+  if (Order != CblasColMajor){
+    printf("erreur dans \"my_cblas_dtrsm\" : condition de l'énoncé non respecté");
+    exit(0);
+  }
+  int sum;
+  B[M-1] /= A[(M-1) + (M-1) * lda];
+  for(int i = M-2; i > -1; i--){
+    sum = 0;
+    for(int j = N-1; j > i; j--){
+      sum += A[i+j*lda] * B[j];
+    }
+    B[i] = (B[i] - sum)/A[i+i*lda];
+  }
+}
+
+//////////////////////////////////////////////////////////////////////////
+// résolution de système linéaire A*X = B
+void my_cblas_dgesv(const enum CBLAS_ORDER Order, const int N, double *A,
+   const int lda, double *B, const int ldb){
+     if (Order != CblasColMajor){
+       printf("erreur dans \"my_cblas_dtrsm\" : condition de l'énoncé non respecté");
+       exit(0);
+     }
+     my_dgetf2(Order, N, N, A, lda);
+     my_cblas_dtrsm(Order, N, N, A, lda, B, ldb);
+}
