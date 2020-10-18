@@ -27,7 +27,6 @@ void test_alloc_et_free(){
   // Vecteur
   printf("\n----- Vecteur -----\n\n");
 
-
   double * v = vecteur(5);
   affiche_vecteur(5, v, 1, stdout);
   free_vecteur(v);
@@ -61,7 +60,6 @@ void test_initialisation(){
 
   // Vecteur
   printf("\n----- Vecteur -----\n\n");
-
 
   double * v = vecteur(5);
   init_vecteur(5, 1, v);
@@ -129,7 +127,7 @@ void test_my_dgemm_scalaire(){
   printf("*************** TEST PRODUIT DE MATRICES : MY_DGEMM_SCALAIRE() ***************\n");
   printf("******************************************************************************\n\n");
 
-  // Allocation matrice
+  // Allocation mémoire des matrices
   double * A = matrice(5, 5);
   double * B = matrice(5, 5);
   double * C = matrice(5, 5);
@@ -149,7 +147,7 @@ void test_my_dgemm_scalaire(){
   printf("\n----- Matrice C -----\n\n");
   affiche(5, 5, C, 5, stdout);
 
-  // Libération mémoire
+  // Libération mémoire des matrices
   free_matrice(A);
   free_matrice(B);
   free_matrice(C);
