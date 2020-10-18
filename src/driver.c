@@ -85,14 +85,41 @@ void test_my_ddot(){
   printf("*************** TEST PRODUIT SCALAIRE : MY_DDOT() *****************\n");
   printf("*******************************************************************\n\n");
 
+  //////////////////////////////////////////////////////////////////////////////
+  // Test du produit scalaire : le résultat est-il correct
+  printf("----- Test de resultat -----\n\n");
+
+  // Initialisation des vecteurs
+  double * vec1 = vecteur(5);
+  double * vec2 = vecteur(5);
+
+  // Initialisation des deux vecteurs
+  init_vecteur(5, 1, vec1);
+  init_vecteur(5, 1, vec2);
+
+  printf("Vecteur 1\n\n");
+  affiche_vecteur(5, vec1, 1, stdout);
+  printf("\nVecteur 2\n\n");
+  affiche_vecteur(5, vec1, 1, stdout);
+  printf("\nResultat du produit scalaire (attendue 55) : %f\n\n", my_ddot(5, vec1, 1, vec2, 1));
+
+  // Libération mémoire des précédents vecteurs
+  free_vecteur(vec1);
+  free_vecteur(vec2);
+
+  //////////////////////////////////////////////////////////////////////////////
+  // Test du produit scalaire : temps d'éxecution
+  printf("----- Test de temps d'execution -----\n\n");
+
   // Initialisation des variables
   int m = 50;
   clock_t debut, fin;
 
+  // Tests pour des tailles de vecteurs croissant
   while (m < 1000000){
-    // Déclaration de deux vecteurs de taille m
-    double * vec1 = vecteur(m);
-    double * vec2 = vecteur(m);
+    // Allocation de deux vecteurs de taille m
+    vec1 = vecteur(m);
+    vec2 = vecteur(m);
 
     // Produit scalaire
     debut = clock();
@@ -127,6 +154,10 @@ void test_my_dgemm_scalaire(){
   printf("*************** TEST PRODUIT DE MATRICES : MY_DGEMM_SCALAIRE() ***************\n");
   printf("******************************************************************************\n\n");
 
+  //////////////////////////////////////////////////////////////////////////////
+  // Test du produit de matrices : le résultat est-il correct
+  printf("----- Test de resultat -----\n\n");
+
   // Allocation mémoire des matrices
   double * A = matrice(5, 5);
   double * B = matrice(5, 5);
@@ -136,21 +167,165 @@ void test_my_dgemm_scalaire(){
   init_matrice(5, 5, 5, A);
   init_matrice(5, 5, 5, B);
 
-  // Test de dgemm pour la calcul de tA * B
-  my_dgemm_scalaire(CblasColMajor, CblasTrans, CblasNoTrans, 5, 5, 5, 1, A, 5, B, 5, 0, C, 5);
-
   // Affichage des matrices
   printf("----- Matrice A -----\n\n");
   affiche(5, 5, A, 5, stdout);
+
   printf("\n----- Matrice B -----\n\n");
   affiche(5, 5, B, 5, stdout);
-  printf("\n----- Matrice C -----\n\n");
+
+  printf("\n----- Resultat attendue -----\n\n");
+  printf("855.000000  910.000000  965.000000  1020.000000  1075.000000\n");
+  printf("910.000000  970.000000  1030.000000  1090.000000  1150.000000\n");
+  printf("965.000000  1030.000000  1095.000000  1160.000000  1225.000000\n");
+  printf("1020.000000  1090.000000  1160.000000  1230.000000  1300.000000\n");
+  printf("1075.000000  1150.000000  1225.000000  1300.000000  1375.000000\n");
+
+  printf("\n----- Matrice (scalaire) C = A * B -----\n\n");
+  my_dgemm_scalaire(CblasColMajor, CblasTrans, CblasNoTrans, 5, 5, 5, 1, A, 5, B, 5, 0, C, 5);
   affiche(5, 5, C, 5, stdout);
+  matrice_zero(5, 5, 5, C);
+
+  printf("\n----- Matrice (ordre kij) C = A * B -----\n\n");
+  my_dgemm_scalaire_kij(CblasColMajor, CblasTrans, CblasNoTrans, 5, 5, 5, 1, A, 5, B, 5, 0, C, 5);
+  affiche(5, 5, C, 5, stdout);
+  matrice_zero(5, 5, 5, C);
+
+  printf("\n----- Matrice (ordre ijk) C = A * B -----\n\n");
+  my_dgemm_scalaire_ijk(CblasColMajor, CblasTrans, CblasNoTrans, 5, 5, 5, 1, A, 5, B, 5, 0, C, 5);
+  affiche(5, 5, C, 5, stdout);
+  matrice_zero(5, 5, 5, C);
+
+  printf("\n----- Matrice (ordre jik) C = A * B -----\n\n");
+  my_dgemm_scalaire_jik(CblasColMajor, CblasTrans, CblasNoTrans, 5, 5, 5, 1, A, 5, B, 5, 0, C, 5);
+  affiche(5, 5, C, 5, stdout);
+  matrice_zero(5, 5, 5, C);
+
+  printf("\n----- Matrice (par bloc) C = A * B -----\n\n");
+  my_dgemm_scalaire(CblasColMajor, CblasTrans, CblasNoTrans, 5, 5, 5, 1, A, 5, B, 5, 0, C, 5);
+  affiche(5, 5, C, 5, stdout);
+  matrice_zero(5, 5, 5, C);
 
   // Libération mémoire des matrices
   free_matrice(A);
   free_matrice(B);
   free_matrice(C);
+
+  //////////////////////////////////////////////////////////////////////////////
+  // Test du produit scalaire : temps d'éxecution
+  printf("\n----- Test de temps d'execution -----\n");
+
+  // Variable pour mesure du temps
+  clock_t debut, fin;
+
+  //////////////////////////////////////////////////////////////////////////////
+  // Tests pour des tailles de matrices croissantes avec l'ordre kij
+  printf("\nTest dgemm avec l'ordre kij :\n\n");
+  for (int size_mat = 100; size_mat <= 1000; size_mat += 100){
+    // Allocation mémoire des matrices
+    A = matrice(size_mat, size_mat);
+    B = matrice(size_mat, size_mat);
+    C = matrice(size_mat, size_mat);
+    matrice_zero(size_mat, size_mat, size_mat, C);
+
+    // Produit de matrices
+    debut = clock();
+    my_dgemm_scalaire_kij(CblasColMajor, CblasTrans, CblasNoTrans, size_mat, size_mat, size_mat, 1, A, 5, B, 5, 0, C, 5);
+    fin = clock();
+
+    // Affichage des performances
+    double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    // (size_mat ligne) * (size_mat colonne) * (size_mat multiplication et size_mat - 1 addition)
+    double flop = (double) (size_mat * size_mat * (2 * size_mat - 1));
+    double Mflop_s = (flop / temps) / 1000000.0;
+    printf("Performance obtenu pour des matrice de taille %7d^2 : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
+
+    // Libération mémoire des matrices
+    free_matrice(A);
+    free_matrice(B);
+    free_matrice(C);
+  }
+
+  // Tests pour des tailles de matrices croissantes avec l'ordre ijk
+  printf("\nTest dgemm avec l'ordre ijk :\n\n");
+  for (int size_mat = 100; size_mat <= 1000; size_mat += 100){
+    // Allocation mémoire des matrices
+    A = matrice(size_mat, size_mat);
+    B = matrice(size_mat, size_mat);
+    C = matrice(size_mat, size_mat);
+    matrice_zero(size_mat, size_mat, size_mat, C);
+
+    // Produit de matrices
+    debut = clock();
+    my_dgemm_scalaire_ijk(CblasColMajor, CblasTrans, CblasNoTrans, size_mat, size_mat, size_mat, 1, A, 5, B, 5, 0, C, 5);
+    fin = clock();
+
+    // Affichage des performances
+    double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    // (size_mat ligne) * (size_mat colonne) * (size_mat multiplication et size_mat - 1 addition)
+    double flop = (double) (size_mat * size_mat * (2 * size_mat - 1));
+    double Mflop_s = (flop / temps) / 1000000.0;
+    printf("Performance obtenu pour des matrice de taille %7d^2 : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
+
+    // Libération mémoire des matrices
+    free_matrice(A);
+    free_matrice(B);
+    free_matrice(C);
+  }
+
+  // Tests pour des tailles de matrices croissantes avec l'ordre jik
+  printf("\nTest dgemm avec l'ordre jik :\n\n");
+  for (int size_mat = 100; size_mat <= 1000; size_mat += 100){
+    // Allocation mémoire des matrices
+    A = matrice(size_mat, size_mat);
+    B = matrice(size_mat, size_mat);
+    C = matrice(size_mat, size_mat);
+    matrice_zero(size_mat, size_mat, size_mat, C);
+
+    // Produit de matrices
+    debut = clock();
+    my_dgemm_scalaire_jik(CblasColMajor, CblasTrans, CblasNoTrans, size_mat, size_mat, size_mat, 1, A, 5, B, 5, 0, C, 5);
+    fin = clock();
+
+    // Affichage des performances
+    double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    // (size_mat ligne) * (size_mat colonne) * (size_mat multiplication et size_mat - 1 addition)
+    double flop = (double) (size_mat * size_mat * (2 * size_mat - 1));
+    double Mflop_s = (flop / temps) / 1000000.0;
+    printf("Performance obtenu pour des matrice de taille %7d^2 : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
+
+    // Libération mémoire des matrices
+    free_matrice(A);
+    free_matrice(B);
+    free_matrice(C);
+  }
+
+  // Tests pour des tailles de matrices croissantes
+  // printf("\nTest dgemm par bloc :\n\n");
+  // for (int size_mat = 100; size_mat <= 1000; size_mat += 100){
+  //   // Allocation mémoire des matrices
+  //   A = matrice(size_mat, size_mat);
+  //   B = matrice(size_mat, size_mat);
+  //   C = matrice(size_mat, size_mat);
+  //   matrice_zero(size_mat, size_mat, size_mat, C);
+  //
+  //   // Produit de matrices
+  //   debut = clock();
+  //   my_dgemm(CblasColMajor, CblasTrans, CblasNoTrans, size_mat, size_mat, size_mat, 1, A, 5, B, 5, 0, C, 5);
+  //   fin = clock();
+  //
+  //   // Affichage des performances
+  //   double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+  //   // (size_mat ligne) * (size_mat colonne) * (size_mat multiplication et size_mat - 1 addition)
+  //   double flop = (double) (size_mat * size_mat * (2 * size_mat - 1));
+  //   double Mflop_s = (flop / temps) / 1000000.0;
+  //   printf("Performance obtenu pour des matrice de taille %7d^2 : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
+  //
+  //   // Libération mémoire des matrices
+  //   free_matrice(A);
+  //   free_matrice(B);
+  //   free_matrice(C);
+  // }
 
   // Fin du test
   printf("\n");

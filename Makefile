@@ -21,11 +21,15 @@ all: driver
 driver: $(BUILD)/driver.o $(BUILD)/util.o
 	$(CC) $(CFLAGS) $^ -o driver
 
-$(BUILD)/driver.o: $(SRC_DIR)/driver.c
-	$(CC) $(CFLAGS) -c $^ -o $@
+$(BUILD)/driver.o: $(SRC_DIR)/driver.c $(SRC_DIR)/util.h
+	$(CC) $(CFLAGS) -c $^
+	@mv driver.o $(BUILD)
+	@rm $(SRC_DIR)/*.gch
 
-$(BUILD)/util.o: $(SRC_DIR)/util.c
-	$(CC) $(CFLAGS) -c $^ -o $@
+$(BUILD)/util.o: $(SRC_DIR)/util.c $(SRC_DIR)/util.h
+	$(CC) $(CFLAGS) -c $^
+	@mv util.o $(BUILD)
+	@rm $(SRC_DIR)/*.gch
 
 
 ################################################################################
@@ -35,7 +39,7 @@ test: driver
 	@./driver
 
 graphe: driver
-	@./driver | grep Performance | tr -s ' ' | cut -d ' ' -f 8,10 > donnees_graphe.txt
+	@./driver | grep "Performance obtenu pour des vecteurs de taille" | tr -s ' ' | cut -d ' ' -f 8,10 > donnees_graphe.txt
 	@python3 tracer_graphe.py donnees_graphe.txt
 
 
