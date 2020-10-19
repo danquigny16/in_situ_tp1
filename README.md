@@ -3,7 +3,8 @@
 ### Auteur
 
 Jérôme Faure  
-Antoine Danquigny
+Antoine Danquigny  
+Pierre Jiang
 
 ### Utilisation
 

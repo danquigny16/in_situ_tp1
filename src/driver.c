@@ -100,7 +100,7 @@ void test_my_ddot(){
   printf("Vecteur 1\n\n");
   affiche_vecteur(5, vec1, 1, stdout);
   printf("\nVecteur 2\n\n");
-  affiche_vecteur(5, vec1, 1, stdout);
+  affiche_vecteur(5, vec2, 1, stdout);
   printf("\nResultat du produit scalaire (attendue 55) : %f\n\n", my_ddot(5, vec1, 1, vec2, 1));
 
   // Libération mémoire des précédents vecteurs
@@ -148,7 +148,7 @@ void test_my_ddot(){
 /**
 Fait les tests relatifs au produit de matrices my_dgemm_scalaire()
 */
-void test_my_dgemm_scalaire(){
+void test_my_dgemm(){
   // Nom du test
   printf("******************************************************************************\n");
   printf("*************** TEST PRODUIT DE MATRICES : MY_DGEMM_SCALAIRE() ***************\n");
@@ -175,11 +175,11 @@ void test_my_dgemm_scalaire(){
   affiche(5, 5, B, 5, stdout);
 
   printf("\n----- Resultat attendue -----\n\n");
-  printf("855.000000  910.000000  965.000000  1020.000000  1075.000000\n");
-  printf("910.000000  970.000000  1030.000000  1090.000000  1150.000000\n");
-  printf("965.000000  1030.000000  1095.000000  1160.000000  1225.000000\n");
-  printf("1020.000000  1090.000000  1160.000000  1230.000000  1300.000000\n");
-  printf("1075.000000  1150.000000  1225.000000  1300.000000  1375.000000\n");
+  printf("[[ 855  910  965 1020 1075]\n");
+  printf(" [ 910  970 1030 1090 1150]\n");
+  printf(" [ 965 1030 1095 1160 1225]\n");
+  printf(" [1020 1090 1160 1230 1300]\n");
+  printf(" [1075 1150 1225 1300 1375]]\n");
 
   printf("\n----- Matrice (scalaire) C = A * B -----\n\n");
   my_dgemm_scalaire(CblasColMajor, CblasTrans, CblasNoTrans, 5, 5, 5, 1, A, 5, B, 5, 0, C, 5);
@@ -371,6 +371,126 @@ void test_my_dgemm_scalaire(){
   printf("\n");
 }
 
+/**
+Fait les tests relatifs aux fonctions blas complémentaires
+*/
+void test_blas(){
+  // Nom du test
+  printf("*****************************************************************************************\n");
+  printf("*************** TEST FONCTIONS BLAS : MY_DAXPY(), MY_DGEMV(), MY_DGER() *****************\n");
+  printf("*****************************************************************************************\n\n");
+
+  //////////////////////////////////////////////////////////////////////////////
+  // Test de my_daxpy()
+  printf("***** Test de my_daxpy() *****\n\n");
+
+  // Initialisation des vecteurs
+  double * vec1 = vecteur(5);
+  double * vec2 = vecteur(5);
+
+  // Initialisation des deux vecteurs
+  init_vecteur(5, 1, vec1);
+  init_vecteur(5, 1, vec2);
+
+  // Affichage des résultats
+  printf("----- Vecteur 1 -----\n\n");
+  affiche_vecteur(5, vec1, 1, stdout);
+
+  printf("\n----- Vecteur 2 -----\n\n");
+  affiche_vecteur(5, vec2, 1, stdout);
+
+  printf("\n----- Resultat attendue -----\n\n");
+  printf("[ 3  6  9 12 15]\n");
+
+  my_cblas_daxpy(5, 2, vec1, 1, vec2, 1);
+  printf("\n----- Resultat obtenue -----\n\n");
+  affiche_vecteur(5, vec2, 1, stdout);
+
+  // Libération mémoire des précédents vecteurs
+  free_vecteur(vec1);
+  free_vecteur(vec2);
+
+  //////////////////////////////////////////////////////////////////////////////
+  // Test de my_daxpy()
+  printf("\n***** Test de my_dgemv() *****\n\n");
+
+  // Initialisation des vecteurs
+  vec1 = vecteur(5);
+  vec2 = vecteur(5);
+  double * mat = matrice(5, 5);
+
+  // Initialisation des deux vecteurs
+  init_vecteur(5, 1, vec1);
+  init_vecteur(5, 1, vec2);
+  init_matrice(5, 5, 5, mat);
+
+    // Affichage des résultats
+  printf("----- Vecteur 1 -----\n\n");
+  affiche_vecteur(5, vec1, 1, stdout);
+
+  printf("\n----- Vecteur 2 -----\n\n");
+  affiche_vecteur(5, vec2, 1, stdout);
+
+  printf("\n----- Matrice -----\n\n");
+  affiche(5, 5, mat, 5, stdout);
+
+  printf("\n----- Resultat attendue -----\n\n");
+  printf("[ 56 132 208 284 360]\n");
+
+  my_cblas_dgemv(CblasColMajor, CblasNoTrans, 5, 5, 1, mat, 5, vec1, 1, 1, vec2, 1);
+  printf("\n----- Resultat obtenue -----\n\n");
+  affiche_vecteur(5, vec2, 1, stdout);
+
+  // Libération mémoire des précédents vecteurs
+  free_vecteur(vec1);
+  free_vecteur(vec2);
+  free_matrice(mat);
+
+  //////////////////////////////////////////////////////////////////////////////
+  // Test de my_daxpy()
+  printf("\n***** Test de my_dger() *****\n\n");
+
+  // Initialisation des vecteurs
+  vec1 = vecteur(5);
+  vec2 = vecteur(5);
+  mat = matrice(5, 5);
+
+  // Initialisation des deux vecteurs
+  init_vecteur(5, 1, vec1);
+  init_vecteur(5, 1, vec2);
+  init_matrice(5, 5, 5, mat);
+
+    // Affichage des résultats
+  printf("----- Vecteur 1 -----\n\n");
+  affiche_vecteur(5, vec1, 1, stdout);
+
+  printf("\n----- Vecteur 2 -----\n\n");
+  affiche_vecteur(5, vec2, 1, stdout);
+
+  printf("\n----- Matrice -----\n\n");
+  affiche(5, 5, mat, 5, stdout);
+
+  printf("\n----- Resultat attendue -----\n\n");
+  printf("[[ 3  6  9 12 15]\n");
+  printf(" [10 15 20 25 30]\n");
+  printf(" [17 24 31 38 45]\n");
+  printf(" [24 33 42 51 60]\n");
+  printf(" [31 42 53 64 75]]\n");
+
+  my_cblas_dger(CblasColMajor, 5, 5, 2, vec1, 1, vec2, 1, mat, 5);
+  printf("\n----- Resultat obtenue -----\n\n");
+  affiche(5, 5, mat, 5, stdout);
+
+  // Libération mémoire des précédents vecteurs
+  free_vecteur(vec1);
+  free_vecteur(vec2);
+  free_matrice(mat);
+
+  //////////////////////////////////////////////////////////////////////////////
+  // Fin du test
+  printf("\n");
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Main
@@ -379,7 +499,8 @@ int main(/*int argc, char ** argv*/){
   test_alloc_et_free();
   test_initialisation();
   test_my_ddot();
-  test_my_dgemm_scalaire();
+  test_my_dgemm();
+  test_blas();
 
   return 0;
 }
