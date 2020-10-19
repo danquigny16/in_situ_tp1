@@ -488,6 +488,50 @@ void test_blas(){
   printf("\n");
 }
 
+/**
+Fait les tests relatifs aux allocation et libération mémoire de matrices et de vecteurs
+*/
+void test_factorisation_LU(){
+  // Nom du test
+  printf("*****************************************************\n");
+  printf("*************** TEST FACTORISATION LU ***************\n");
+  printf("*****************************************************\n");
+
+  // Initialisation des vecteurs
+  double * vec = vecteur(5);
+  double * mat = matrice(5, 5);
+
+  // Initialisation des deux vecteurs
+  init_vecteur(5, 1, vec);
+  //init_matrice(5, 5, 5, mat);
+  matrice_diag_2(5, 5, 5, mat);
+
+    // Affichage des résultats
+  printf("\n----- Matrice -----\n\n");
+  affiche(5, 5, mat, 5, stdout);
+
+  printf("\n----- Vecteur -----\n\n");
+  affiche_vecteur(5, vec, 1, stdout);
+
+  printf("\n----- Resultat attendue -----\n\n");
+  printf("\n[[0.5]\n");
+  printf("\n [1. ]\n");
+  printf("\n [1.5]\n");
+  printf("\n [2. ]\n");
+  printf("\n [2.5]]\n");
+
+  my_cblas_dgesv(CblasColMajor, 5, mat, 5, vec, 1);
+  printf("\n----- Resultat obtenue -----\n\n");
+  affiche_vecteur(5, vec, 1, stdout);
+
+  // Libération mémoire des précédents vecteurs
+  free_vecteur(vec);
+  free_matrice(mat);
+
+  // Fin du test
+  printf("\n");
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Main
@@ -498,6 +542,7 @@ int main(/*int argc, char ** argv*/){
   test_my_ddot();
   test_my_dgemm();
   test_blas();
+  test_factorisation_LU();
 
   return 0;
 }
