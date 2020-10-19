@@ -21,6 +21,7 @@ void fixer_elt_matrice(int m, int n, int lda, double *a, double val);
 void fixer_elt_vecteur(int n, int lda, double *v, double val);
 void matrice_zero(int m, int n, int lda, double *a);
 void vecteur_zero(int n, int lda, double *v);
+void matrice_diag_2(int m, int n, int lda, double *a);
 void init_matrice(int m, int n, int lda, double *a);
 void init_vecteur(int n, int lda, double *v);
 

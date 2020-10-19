@@ -132,6 +132,27 @@ void vecteur_zero(int n, int lda, double *v){
 }
 
 /**
+Transforme la matrice en une matrice nulle avec une diagonale remplie de 2
+@param m : hauteur
+@param n : largeur
+@param a : matrice
+*/
+void matrice_diag_2(int m, int n, int lda, double *a){
+  // ligne
+  for (int i = 0; i < m; i++){
+    // colonne
+    for (int j = 0; j < n; j++){
+      if (i == j){
+        a[i + j * lda] = 2.0;
+      }
+      else{
+        a[i + j * lda] = 0.0;
+      }
+    }
+  }
+}
+
+/**
 initialise la matrice en allant de 1.0 à m*n, de gauche à droite puis de haut en bas
 @param m : hauteur
 @param n : largeur
