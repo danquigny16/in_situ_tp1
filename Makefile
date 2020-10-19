@@ -5,7 +5,7 @@
 CC=gcc
 
 #option
-CFLAGS=-Wall -Wextra -std=c99
+CFLAGS=-Wall -Wextra -std=c99 -O3
 
 #dossiers
 SRC_DIR=src

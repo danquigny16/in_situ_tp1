@@ -357,6 +357,42 @@ void my_dgemm_scalaire_jik(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSP
   }
 }
 
+void my_dgemm_scalaire_jik_unroll(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB,
+                       const int M, const int N, const int K,
+                       const double alpha, const double *A, const int lda,
+                       const double *B, const int ldb,
+                       const double beta, double *C, const int ldc){
+  //////////////////////////////////////////////////////////////////////////////
+  // Pour cette fonction on suppose dans l'énoncé qu'on est en CblasColMajor, qu'on prend la transposé de A,
+  // qu'on laisse B tel quel, que l'on manipule des matrices carrés m*m, que alpha vaut 1 et beta 0,
+  // qu
+  if (Order != CblasColMajor || TransA != CblasTrans || TransB != CblasNoTrans || M != N || N != K || alpha != 1 || beta != 0){
+    printf("erreur dans \"my_dgemm_scalaire\" : condition de l'énoncé non respecté\n");
+    exit(0);
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  // On effectue le produit et la somme de matrices (alpha * tA) * B + (beta * C)
+  // i parcourt les lignes de tA (donc les colonnes de A)
+  // j les colonnes de B
+  // k les lignes de B (et les colonnes de tA donc les lignes de A)
+  for (int j = 0; j < M; j++){
+    for (int i = 0; i < M; i++){
+      for (int k = 0; k < M; k+=4){
+        // C = A * B ---> C[i + j * ldc] += A[i + k * lda] * B[k + j * ldb];
+        // tA(i, j) = A(j, i)
+        // C = tA * b ---> C[i + j * ldc] += A[k + i * lda] * B[k + j * ldb];
+        C[i + j * ldc] += A[k + i * lda] * B[k + j * ldb];
+        C[i + j * ldc] += A[(k+1) + i * lda] * B[(k+1) + j * ldb];
+        C[i + j * ldc] += A[(k+2) + i * lda] * B[(k+2) + j * ldb];
+        C[i + j * ldc] += A[(k+3) + i * lda] * B[(k+3) + j * ldb];
+      }
+    }
+  }
+}
+
+
+
 /**
 Effectue : C <- alpha * (t)A * (t)B + beta * C
 Avec les tailles : -A : m*k
