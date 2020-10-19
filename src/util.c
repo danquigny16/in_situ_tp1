@@ -224,7 +224,7 @@ void my_dgemm_scalaire_kij(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSP
   // qu'on laisse B tel quel, que l'on manipule des matrices carrés m*m, que alpha vaut 1 et beta 0,
   // qu
   if (Order != CblasColMajor || TransA != CblasTrans || TransB != CblasNoTrans || M != N || N != K || alpha != 1 || beta != 0){
-    printf("erreur dans \"my_dgemm_scalaire\" : condition de l'énoncé non respecté");
+    printf("erreur dans \"my_dgemm_scalaire\" : condition de l'énoncé non respecté\n");
     exit(0);
   }
 
@@ -280,7 +280,7 @@ void my_dgemm_scalaire_ijk(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSP
   // qu'on laisse B tel quel, que l'on manipule des matrices carrés m*m, que alpha vaut 1 et beta 0,
   // qu
   if (Order != CblasColMajor || TransA != CblasTrans || TransB != CblasNoTrans || M != N || N != K || alpha != 1 || beta != 0){
-    printf("erreur dans \"my_dgemm_scalaire\" : condition de l'énoncé non respecté");
+    printf("erreur dans \"my_dgemm_scalaire\" : condition de l'énoncé non respecté\n");
     exit(0);
   }
 
@@ -336,7 +336,7 @@ void my_dgemm_scalaire_jik(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSP
   // qu'on laisse B tel quel, que l'on manipule des matrices carrés m*m, que alpha vaut 1 et beta 0,
   // qu
   if (Order != CblasColMajor || TransA != CblasTrans || TransB != CblasNoTrans || M != N || N != K || alpha != 1 || beta != 0){
-    printf("erreur dans \"my_dgemm_scalaire\" : condition de l'énoncé non respecté");
+    printf("erreur dans \"my_dgemm_scalaire\" : condition de l'énoncé non respecté\n");
     exit(0);
   }
 
@@ -400,13 +400,13 @@ void my_dgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, c
   // qu'on laisse B tel quel, que l'on manipule des matrices carrés m*m, que alpha vaut 1 et beta 0,
   // qu
   if (Order != CblasColMajor || TransA != CblasTrans || TransB != CblasNoTrans || M != N || N != K || alpha != 1 || beta != 0){
-    printf("erreur dans \"my_dgemm_scalaire\" : condition de l'énoncé non respecté");
+    printf("erreur dans \"my_dgemm_scalaire\" : condition de l'énoncé non respecté\n");
     exit(0);
   }
 
   // on définit une taille de bloc pour le produit de matrice par bloc, en supposant M multiple de bloc_size
   // sinon pb avec my_dgemm_scalaire, qui doit prendre des matrices carrés
-  int bloc_size = 5;
+  int bloc_size = 10;
 
   //////////////////////////////////////////////////////////////////////////////
   // On effectue le produit et la somme de matrices (alpha * tA) * B + (beta * C)
@@ -426,7 +426,6 @@ void my_dgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, c
       }
     }
   }
-
 }
 
 
@@ -449,8 +448,8 @@ void my_cblas_dgemv(const enum CBLAS_ORDER order,
                  const double alpha, const double *A, const int lda,
                  const double *X, const int incX, const double beta,
                  double *Y, const int incY){
-  if (order != CblasColMajor || TransA != CblasTrans){
-    printf("erreur dans \"my_cblas_dgemv\" : condition de l'énoncé non respecté");
+  if (order != CblasColMajor || TransA != CblasNoTrans || alpha != 1 || beta != 1 || M != N){
+    printf("erreur dans \"my_cblas_dgemv\" : condition de l'énoncé non respecté\n");
     exit(0);
   }
   for(int i=0; i<M; i++){
@@ -466,7 +465,7 @@ void my_cblas_dger(const enum CBLAS_ORDER order, const int M, const int N,
                 const double alpha, const double *X, const int incX,
                 const double *Y, const int incY, double *A, const int lda){
   if (order != CblasColMajor){
-    printf("erreur dans \"my_cblas_dger\" : condition de l'énoncé non respecté");
+    printf("erreur dans \"my_cblas_dger\" : condition de l'énoncé non respecté\n");
     exit(0);
   }
   for(int i=0; i<M; i++){
@@ -482,9 +481,9 @@ void my_cblas_dger(const enum CBLAS_ORDER order, const int M, const int N,
 
 ///////////////////////////////////////////////////////////////////////////////
 // Factorisation LU de la matrice a
-int my_dgetf2(const enum CBLAS_ORDER Order, int m, int n, double* a, int lda){
+void my_dgetf2(const enum CBLAS_ORDER Order, int m, int n, double* a, int lda){
   if (Order != CblasColMajor){
-    printf("erreur dans \"my_cblas_dger\" : condition de l'énoncé non respecté");
+    printf("erreur dans \"my_cblas_dger\" : condition de l'énoncé non respecté\n");
     exit(0);
   }
   for(int i=0; i<m; i++){
@@ -501,7 +500,7 @@ int my_dgetf2(const enum CBLAS_ORDER Order, int m, int n, double* a, int lda){
 // Résolution de système triangulaire LX = B
 void my_cblas_dtrsm(const enum CBLAS_ORDER Order, const int M, const int N, const double *A, const int lda, double *B, const int ldb){
   if (Order != CblasColMajor){
-    printf("erreur dans \"my_cblas_dtrsm\" : condition de l'énoncé non respecté");
+    printf("erreur dans \"my_cblas_dtrsm\" : condition de l'énoncé non respecté\n");
     exit(0);
   }
   int sum;
@@ -519,7 +518,7 @@ void my_cblas_dtrsm(const enum CBLAS_ORDER Order, const int M, const int N, cons
 // résolution de système linéaire A*X = B
 void my_cblas_dgesv(const enum CBLAS_ORDER Order, const int N, double *A, const int lda, double *B, const int ldb){
      if (Order != CblasColMajor){
-       printf("erreur dans \"my_cblas_dtrsm\" : condition de l'énoncé non respecté");
+       printf("erreur dans \"my_cblas_dtrsm\" : condition de l'énoncé non respecté\n");
        exit(0);
      }
      my_dgetf2(Order, N, N, A, lda);
