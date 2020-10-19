@@ -356,8 +356,8 @@ void test_my_dgemm(){
     // Affichage des performances
     double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
     // (size_mat ligne) * (size_mat colonne) * (size_mat multiplication et size_mat - 1 addition)
-    double flop = (double) (size_mat * size_mat * (2 * size_mat - 1));
-    double Mflop_s = (flop / temps) / 1000000.0;
+    int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
+    double Mflop_s = (Mflop / temps) ;
 
     printf("Performance obtenu pour des matrice de taille %7d^2 : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
 
