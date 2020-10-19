@@ -571,7 +571,7 @@ void my_cblas_dger(const enum CBLAS_ORDER order, const int M, const int N,
 // Factorisation LU de la matrice a
 void my_dgetf2(const enum CBLAS_ORDER Order, int m, int n, double* a, int lda){
   if (Order != CblasColMajor){
-    printf("erreur dans \"my_cblas_dger\" : condition de l'énoncé non respecté\n");
+    printf("erreur dans \"my_cblas_dgetf2\" : condition de l'énoncé non respecté\n");
     exit(0);
   }
   for(int i=0; i<m; i++){
