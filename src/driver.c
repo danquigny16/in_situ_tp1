@@ -275,7 +275,7 @@ void test_my_dgemm(){
     // (size_mat ligne) * (size_mat colonne) * (size_mat multiplication et size_mat - 1 addition)
     int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
     double Mflop_s = (Mflop / temps) ;
-    printf("Performance obtenu pour des matrices de taille %7d^2 ordre kij : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
+    printf("Performance obtenu pour des matrices de taille %7d ordre kij : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
 
     // Libération mémoire des matrices
     free_matrice(A);
@@ -303,7 +303,7 @@ void test_my_dgemm(){
     int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
     double Mflop_s = (Mflop / temps) ;
 
-    printf("Performance obtenu pour des matrices de taille %7d^2 ordre ijk : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
+    printf("Performance obtenu pour des matrices de taille %7d ordre ijk : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
 
     // Libération mémoire des matrices
     free_matrice(A);
@@ -331,7 +331,7 @@ void test_my_dgemm(){
     int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
     double Mflop_s = (Mflop / temps) ;
 
-    printf("Performance obtenu pour des matrices de taille %7d^2 ordre jik : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
+    printf("Performance obtenu pour des matrices de taille %7d ordre jik : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
 
     // Libération mémoire des matrices
     free_matrice(A);
@@ -358,7 +358,7 @@ void test_my_dgemm(){
     // (size_mat ligne) * (size_mat colonne) * (size_mat multiplication et size_mat - 1 addition)
     int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
     double Mflop_s = (Mflop / temps) ;
-    printf("Performance obtenu pour des matrices de taille %7d^2 ordre kji : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
+    printf("Performance obtenu pour des matrices de taille %7d ordre kji : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
 
     // Libération mémoire des matrices
     free_matrice(A);
@@ -386,7 +386,7 @@ void test_my_dgemm(){
     int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
     double Mflop_s = (Mflop / temps) ;
 
-    printf("Performance obtenu pour des matrices de taille %7d^2 ordre jik unroll: %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
+    printf("Performance obtenu pour des matrices de taille %7d ordre jik unroll: %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
 
     // Libération mémoire des matrices
     free_matrice(A);
@@ -397,7 +397,7 @@ void test_my_dgemm(){
 
   // Tests pour des tailles de matrices croissantes
   printf("\nTest dgemm par bloc :\n\n");
-  for (int size_mat = 200; size_mat <= 2000; size_mat += 200){
+  for (int size_mat = 1000; size_mat <= 2000; size_mat += 200){
     // Allocation mémoire des matrices
     A = matrice(size_mat, size_mat);
     B = matrice(size_mat, size_mat);
@@ -415,7 +415,7 @@ void test_my_dgemm(){
     int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
     double Mflop_s = (Mflop / temps) ;
 
-    printf("Performance obtenu pour des matrices de taille %7d^2 par bloc : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
+    printf("Performance obtenu pour des matrices de taille %7d par bloc : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
 
     // Libération mémoire des matrices
     free_matrice(A);

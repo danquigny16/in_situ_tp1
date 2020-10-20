@@ -591,6 +591,7 @@ void my_cblas_dtrsm(const enum CBLAS_ORDER Order, const int M, const int N, cons
     printf("erreur dans \"my_cblas_dtrsm\" : condition de l'énoncé non respecté\n");
     exit(0);
   }
+  (void) ldb;
   int sum;
   B[M-1] /= A[(M-1) + (M-1) * lda];
   for(int i = M-2; i > -1; i--){
