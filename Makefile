@@ -42,23 +42,19 @@ $(LIB)/libmylapack.a: $(BUILD)/util.o $(BUILD)/mylapack.o
 	$(AR) $(ARFLAGS) $@ $^
 
 $(BUILD)/driver: $(BUILD)/driver.o $(BUILD)/util.o $(LIB)/libmylapack.a $(LIB)/libmyblas.a
-	$(CC) $(BUILD)/driver.o $(BUILD)/util.o -L$(LIB)/ -lmyblas -lmylapack -o $@ 
+	$(CC) $(BUILD)/driver.o $(BUILD)/util.o -L$(LIB)/ -lmyblas -lmylapack -o $@
 
 ################################################################################
 #partie exécution
 
+#tee permet de diriger le flux d'entrée vers plusieurs sorties, stdout + les fichiers spécifiés
 test: $(BUILD)/driver
-	#tee permet de diriger le flux d'entrée vers plusieurs sorties, stdout + les fichiers spécifiés
-	@$< | tee result.txt
+	@$< | tee $(GRAPHE)/result.txt
 
-result.txt: $(BUILD)/driver
-	@$< | tee result.txt
-
-
-$(BUILD)/result.txt: $(BUILD)/driver
+$(GRAPHE)/result.txt: $(BUILD)/driver
 	@$< | tee $@
 
-data: $(BUILD)/result.txt
+data: $(GRAPHE)/result.txt
 	@cat $< | grep "Performance obtenu pour des vecteurs de taille" | grep -v "unroll" | tr -s ' ' | cut -d ' ' -f 8,10 > $(GRAPHE)/produit_vect_graphe.txt
 	@cat $< | grep "Performance obtenu pour des vecteurs de taille" | grep "unroll" | tr -s ' ' | cut -d ' ' -f 8,12 > $(GRAPHE)/produit_vect_unroll_graphe.txt
 	@cat $< | grep "Performance obtenu pour des matrices de taille" | grep "kij" | tr -s ' ' | cut -d ' ' -f 8,12 > $(GRAPHE)/produit_mat_kij_graphe.txt
@@ -77,7 +73,7 @@ graphe: data
 .PHONY: clean clean_graphe clean_data clean_exec clean_all
 
 clean:
-	@rm -f $(BUILD)/*.o $(LIB)/*.a $(BUILD)/driver
+	@rm -f $(BUILD)/*.o $(LIB)/*.a
 
 clean_graphe:
 	@rm -f $(GRAPHE)/*.png
@@ -88,7 +84,4 @@ clean_data:
 clean_exec: clean
 	@rm -f $(BUILD)/driver
 
-clean_result:
-	@rm -f $(BUILD)/result.txt
-
-clean_all: clean_graphe clean_data clean_exec clean_result
+clean_all: clean_graphe clean_data clean_exec

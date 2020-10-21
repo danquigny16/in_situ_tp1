@@ -7,4 +7,3 @@
 module load compiler/gcc/9.1.0
 module load language/python/3.5.9
 make && make graphe
-./build/driver

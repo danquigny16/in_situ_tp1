@@ -1,6 +1,6 @@
-driver
-*.txt
 graphe/*
 !graphe/.gitkeep
 build/*
 !build/.gitkeep
+lib/*
+!lib/.gitkeep

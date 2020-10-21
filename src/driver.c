@@ -592,7 +592,7 @@ void test_factorisation_LU(){
   printf("\n [0.00740624]\n");
   printf("\n [0.0069124 ]]\n");
 
-  my_dgesv(CblasColMajor, 5, mat, 5, vec, 1);
+  my_dgesv(CblasColMajor, 5, 1, mat, 5, NULL, vec, 1);
   printf("\n----- Resultat obtenue -----\n\n");
   affiche_vecteur(5, vec, 1, stdout);
 
@@ -612,7 +612,7 @@ int main(/*int argc, char ** argv*/){
   test_alloc_et_free();
   test_initialisation();
   test_my_ddot();
-  //test_my_dgemm();
+  test_my_dgemm();
   test_blas();
   test_factorisation_LU();
 

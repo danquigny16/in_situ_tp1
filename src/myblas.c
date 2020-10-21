@@ -1,23 +1,22 @@
-#include "util.h"
 #include "myblas.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Produit scalaire
 
 /**
-Effectue le produit scalaire entre les vecteurs "X" et "Y"
-@param N Nombre d'éléments des vecteurs "X" et "Y"
-@param X Vecteur "X"
-@param incX Incrément entre chaque élément de "X"
-@param Y Vecteur "Y"
-@param incX Incrément entre chaque élément de "Y"
-@return Le résultat du produit scalaire
+Effectue le produit scalaire entre les vecteurs X et Y
+@param N Nombre d'éléments des vecteurs X et Y
+@param X Vecteur X
+@param incX leading dimension de  X
+@param Y Vecteur Y
+@param incY leading dimension de  Y
+@return : Le résultat du produit scalaire
 */
 double my_ddot(const int N, const double *X, const int incX, const double *Y, const int incY){
   int res = 0;
 
   for (int i = 0; i < N; i++){
-    res += X[i*incX] * Y[i*incY];
+    res += X[i * incX] * Y[i * incY];
   }
 
   return res;
@@ -26,46 +25,53 @@ double my_ddot(const int N, const double *X, const int incX, const double *Y, co
 double my_ddot_unroll(const int N, const double *X, const int incX, const double *Y, const int incY){
   int res = 0;
 
+  // Unroll sur 2 instructions
   for (int i = 0; i < N; i+=2){
-    res += X[i*incX] * Y[i*incY];
-    res += X[(i+1)*incX] * Y[(i+1)*incY];
+    res += X[i * incX] * Y[i * incY];
+    res += X[(i + 1) * incX] * Y[(i + 2) * incY];
+  }
+
+  // On n'oublie le dernier élément si N est impaire
+  if (N % 2 != 0){
+    res += X[(N - 1) * incX] * Y[(N - 1) * incY];
   }
 
   return res;
 }
+
 ////////////////////////////////////////////////////////////////////////////////
 // Produit de matrices
 
 /**
 Effectue : C <- alpha * (t)A * (t)B + beta * C
-Avec les tailles : -A : m*k
-                   -B : k*n
-                   -C : m*n
+Avec les tailles : -A : M*K
+                   -B : K*N
+                   -C : M*N
 Ici l'énoncé nous demande :
                    -de ne prendre en compte que le cas CblasColMajor
                    -de ne prendre en compte que le cas m == k == n
                    -de ne faire que : C <- tA * B
 Ici on fait les 3 boucle for dans l'ordre (k,i,j)
-@param Order : Indique si les matrices A, B et C sont stocké en CblasRowMajor ou en CblasColMajor
+@param Order : Indique si les matrices A, B et C sont stockées en CblasRowMajor ou en CblasColMajor
 @param TransA : Indique si on doit prendre la matrice A tel quel ou sa transposé
 @param TransB : Indique si on doit prendre la matrice B tel quel ou sa transposé
-@param M : nombre de ligne de A / nombre de ligne de C
+@param M : Nombre de ligne de A / nombre de ligne de C
 @param N : nombre de colonne de B / nombre de colonne de C
 @param K : nombre de colonne de A / nombre de ligne de B
-@param alpha : voir formule
-@param A : voir formule
-@param lda : leading dimension de A
-@param B : voir formule
-@param ldb : leading dimension de B
-@param beta : voir formule
-@param C : voir formule
-@param ldc : leading dimension de C
+@param Alpha : Scalaire alpha
+@param A : Matrice A
+@param lda : Leading dimension de A
+@param B : Matrice B
+@param ldb : Leading dimension de B
+@param beta : Scalaire beta
+@param C : Matrice C
+@param ldc : Leading dimension de C
 */
 void my_dgemm_scalaire_kij(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB,
-                       const int M, const int N, const int K,
-                       const double alpha, const double *A, const int lda,
-                       const double *B, const int ldb,
-                       const double beta, double *C, const int ldc){
+                           const int M, const int N, const int K,
+                           const double alpha, const double *A, const int lda,
+                           const double *B, const int ldb,
+                           const double beta, double *C, const int ldc){
   //////////////////////////////////////////////////////////////////////////////
   // Pour cette fonction on suppose dans l'énoncé qu'on est en CblasColMajor, qu'on prend la transposé de A,
   // qu'on laisse B tel quel, que l'on manipule des matrices carrés m*m, que alpha vaut 1 et beta 0,
@@ -94,34 +100,34 @@ void my_dgemm_scalaire_kij(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSP
 
 /**
 Effectue : C <- alpha * (t)A * (t)B + beta * C
-Avec les tailles : -A : m*k
-                   -B : k*n
-                   -C : m*n
+Avec les tailles : -A : M*K
+                   -B : K*N
+                   -C : M*N
 Ici l'énoncé nous demande :
                    -de ne prendre en compte que le cas CblasColMajor
                    -de ne prendre en compte que le cas m == k == n
                    -de ne faire que : C <- tA * B
 Ici on fait les 3 boucle for dans l'ordre (i,j,k)
-@param Order : Indique si les matrices A, B et C sont stocké en CblasRowMajor ou en CblasColMajor
+@param Order : Indique si les matrices A, B et C sont stockées en CblasRowMajor ou en CblasColMajor
 @param TransA : Indique si on doit prendre la matrice A tel quel ou sa transposé
 @param TransB : Indique si on doit prendre la matrice B tel quel ou sa transposé
-@param M : nombre de ligne de A / nombre de ligne de C
+@param M : Nombre de ligne de A / nombre de ligne de C
 @param N : nombre de colonne de B / nombre de colonne de C
 @param K : nombre de colonne de A / nombre de ligne de B
-@param alpha : voir formule
-@param A : voir formule
-@param lda : leading dimension de A
-@param B : voir formule
-@param ldb : leading dimension de B
-@param beta : voir formule
-@param C : voir formule
-@param ldc : leading dimension de C
+@param Alpha : Scalaire alpha
+@param A : Matrice A
+@param lda : Leading dimension de A
+@param B : Matrice B
+@param ldb : Leading dimension de B
+@param beta : Scalaire beta
+@param C : Matrice C
+@param ldc : Leading dimension de C
 */
 void my_dgemm_scalaire_ijk(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB,
-                       const int M, const int N, const int K,
-                       const double alpha, const double *A, const int lda,
-                       const double *B, const int ldb,
-                       const double beta, double *C, const int ldc){
+                           const int M, const int N, const int K,
+                           const double alpha, const double *A, const int lda,
+                           const double *B, const int ldb,
+                           const double beta, double *C, const int ldc){
   //////////////////////////////////////////////////////////////////////////////
   // Pour cette fonction on suppose dans l'énoncé qu'on est en CblasColMajor, qu'on prend la transposé de A,
   // qu'on laisse B tel quel, que l'on manipule des matrices carrés m*m, que alpha vaut 1 et beta 0,
@@ -150,34 +156,34 @@ void my_dgemm_scalaire_ijk(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSP
 
 /**
 Effectue : C <- alpha * (t)A * (t)B + beta * C
-Avec les tailles : -A : m*k
-                   -B : k*n
-                   -C : m*n
+Avec les tailles : -A : M*K
+                   -B : K*N
+                   -C : M*N
 Ici l'énoncé nous demande :
                    -de ne prendre en compte que le cas CblasColMajor
                    -de ne prendre en compte que le cas m == k == n
                    -de ne faire que : C <- tA * B
 Ici on fait les 3 boucle for dans l'ordre (j,i,k)
-@param Order : Indique si les matrices A, B et C sont stocké en CblasRowMajor ou en CblasColMajor
+@param Order : Indique si les matrices A, B et C sont stockées en CblasRowMajor ou en CblasColMajor
 @param TransA : Indique si on doit prendre la matrice A tel quel ou sa transposé
 @param TransB : Indique si on doit prendre la matrice B tel quel ou sa transposé
-@param M : nombre de ligne de A / nombre de ligne de C
+@param M : Nombre de ligne de A / nombre de ligne de C
 @param N : nombre de colonne de B / nombre de colonne de C
 @param K : nombre de colonne de A / nombre de ligne de B
-@param alpha : voir formule
-@param A : voir formule
-@param lda : leading dimension de A
-@param B : voir formule
-@param ldb : leading dimension de B
-@param beta : voir formule
-@param C : voir formule
-@param ldc : leading dimension de C
+@param Alpha : Scalaire alpha
+@param A : Matrice A
+@param lda : Leading dimension de A
+@param B : Matrice B
+@param ldb : Leading dimension de B
+@param beta : Scalaire beta
+@param C : Matrice C
+@param ldc : Leading dimension de C
 */
 void my_dgemm_scalaire_jik(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB,
-                       const int M, const int N, const int K,
-                       const double alpha, const double *A, const int lda,
-                       const double *B, const int ldb,
-                       const double beta, double *C, const int ldc){
+                           const int M, const int N, const int K,
+                           const double alpha, const double *A, const int lda,
+                           const double *B, const int ldb,
+                           const double beta, double *C, const int ldc){
   //////////////////////////////////////////////////////////////////////////////
   // Pour cette fonction on suppose dans l'énoncé qu'on est en CblasColMajor, qu'on prend la transposé de A,
   // qu'on laisse B tel quel, que l'on manipule des matrices carrés m*m, que alpha vaut 1 et beta 0,
@@ -204,11 +210,36 @@ void my_dgemm_scalaire_jik(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSP
   }
 }
 
+/**
+Effectue : C <- alpha * (t)A * (t)B + beta * C
+Avec les tailles : -A : M*K
+                   -B : K*N
+                   -C : M*N
+Ici l'énoncé nous demande :
+                   -de ne prendre en compte que le cas CblasColMajor
+                   -de ne prendre en compte que le cas m == k == n
+                   -de ne faire que : C <- tA * B
+Ici on fait les 3 boucle for dans l'ordre (k,j,i)
+@param Order : Indique si les matrices A, B et C sont stockées en CblasRowMajor ou en CblasColMajor
+@param TransA : Indique si on doit prendre la matrice A tel quel ou sa transposé
+@param TransB : Indique si on doit prendre la matrice B tel quel ou sa transposé
+@param M : Nombre de ligne de A / nombre de ligne de C
+@param N : nombre de colonne de B / nombre de colonne de C
+@param K : nombre de colonne de A / nombre de ligne de B
+@param Alpha : Scalaire alpha
+@param A : Matrice A
+@param lda : Leading dimension de A
+@param B : Matrice B
+@param ldb : Leading dimension de B
+@param beta : Scalaire beta
+@param C : Matrice C
+@param ldc : Leading dimension de C
+*/
 void my_dgemm_scalaire_kji(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB,
-                       const int M, const int N, const int K,
-                       const double alpha, const double *A, const int lda,
-                       const double *B, const int ldb,
-                       const double beta, double *C, const int ldc){
+                           const int M, const int N, const int K,
+                           const double alpha, const double *A, const int lda,
+                           const double *B, const int ldb,
+                           const double beta, double *C, const int ldc){
   //////////////////////////////////////////////////////////////////////////////
   // Pour cette fonction on suppose dans l'énoncé qu'on est en CblasColMajor, qu'on prend la transposé de A,
   // qu'on laisse B tel quel, que l'on manipule des matrices carrés m*m, que alpha vaut 1 et beta 0,
@@ -235,11 +266,36 @@ void my_dgemm_scalaire_kji(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSP
   }
 }
 
+/**
+Effectue : C <- alpha * (t)A * (t)B + beta * C
+Avec les tailles : -A : M*K
+                   -B : K*N
+                   -C : M*N
+Ici l'énoncé nous demande :
+                   -de ne prendre en compte que le cas CblasColMajor
+                   -de ne prendre en compte que le cas m == k == n
+                   -de ne faire que : C <- tA * B
+Ici on fait les 3 boucle for dans l'ordre (j,i,k), et on ajoute un unroll au niveau de la triple boucle for pour tenter d'opitimiser le code
+@param Order : Indique si les matrices A, B et C sont stockées en CblasRowMajor ou en CblasColMajor
+@param TransA : Indique si on doit prendre la matrice A tel quel ou sa transposé
+@param TransB : Indique si on doit prendre la matrice B tel quel ou sa transposé
+@param M : Nombre de ligne de A / nombre de ligne de C
+@param N : nombre de colonne de B / nombre de colonne de C
+@param K : nombre de colonne de A / nombre de ligne de B
+@param Alpha : Scalaire alpha
+@param A : Matrice A
+@param lda : Leading dimension de A
+@param B : Matrice B
+@param ldb : Leading dimension de B
+@param beta : Scalaire beta
+@param C : Matrice C
+@param ldc : Leading dimension de C
+*/
 void my_dgemm_scalaire_jik_unroll(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB,
-                       const int M, const int N, const int K,
-                       const double alpha, const double *A, const int lda,
-                       const double *B, const int ldb,
-                       const double beta, double *C, const int ldc){
+                                  const int M, const int N, const int K,
+                                  const double alpha, const double *A, const int lda,
+                                  const double *B, const int ldb,
+                                  const double beta, double *C, const int ldc){
   //////////////////////////////////////////////////////////////////////////////
   // Pour cette fonction on suppose dans l'énoncé qu'on est en CblasColMajor, qu'on prend la transposé de A,
   // qu'on laisse B tel quel, que l'on manipule des matrices carrés m*m, que alpha vaut 1 et beta 0,
@@ -256,7 +312,7 @@ void my_dgemm_scalaire_jik_unroll(const enum CBLAS_ORDER Order, const enum CBLAS
   // k les lignes de B (et les colonnes de tA donc les lignes de A)
   for (int j = 0; j < M; j++){
     for (int i = 0; i < M; i++){
-      for (int k = 0; k < M; k+=4){
+      for (int k = 0; k < M; k += 4){
         // C = A * B ---> C[i + j * ldc] += A[i + k * lda] * B[k + j * ldb];
         // tA(i, j) = A(j, i)
         // C = tA * b ---> C[i + j * ldc] += A[k + i * lda] * B[k + j * ldb];
@@ -269,31 +325,30 @@ void my_dgemm_scalaire_jik_unroll(const enum CBLAS_ORDER Order, const enum CBLAS
   }
 }
 
-
-
 /**
 Effectue : C <- alpha * (t)A * (t)B + beta * C
-Avec les tailles : -A : m*k
-                   -B : k*n
-                   -C : m*n
+Avec les tailles : -A : M*K
+                   -B : K*N
+                   -C : M*N
 Ici l'énoncé nous demande :
                    -de ne prendre en compte que le cas CblasColMajor
                    -de ne prendre en compte que le cas m == k == n
                    -de ne faire que : C <- tA * B
-@param Order : Indique si les matrices A, B et C sont stocké en CblasRowMajor ou en CblasColMajor
+On se contente de prendre le meilleur des algo précédents (my_dgemm_scalaire_*)
+@param Order : Indique si les matrices A, B et C sont stockées en CblasRowMajor ou en CblasColMajor
 @param TransA : Indique si on doit prendre la matrice A tel quel ou sa transposé
 @param TransB : Indique si on doit prendre la matrice B tel quel ou sa transposé
-@param M : nombre de ligne de A / nombre de ligne de C
+@param M : Nombre de ligne de A / nombre de ligne de C
 @param N : nombre de colonne de B / nombre de colonne de C
 @param K : nombre de colonne de A / nombre de ligne de B
-@param alpha : voir formule
-@param A : voir formule
-@param lda : leading dimension de A
-@param B : voir formule
-@param ldb : leading dimension de B
-@param beta : voir formule
-@param C : voir formule
-@param ldc : leading dimension de C
+@param Alpha : Scalaire alpha
+@param A : Matrice A
+@param lda : Leading dimension de A
+@param B : Matrice B
+@param ldb : Leading dimension de B
+@param beta : Scalaire beta
+@param C : Matrice C
+@param ldc : Leading dimension de C
 */
 void my_dgemm_scalaire(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB,
                        const int M, const int N, const int K,
@@ -304,6 +359,31 @@ void my_dgemm_scalaire(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE 
   my_dgemm_scalaire_kji(Order, TransA, TransB, M, N, K, alpha, A, lda, B, ldb, beta, C, ldc);
 }
 
+/**
+Effectue : C <- alpha * (t)A * (t)B + beta * C
+Avec les tailles : -A : M*K
+                   -B : K*N
+                   -C : M*N
+Ici l'énoncé nous demande :
+                   -de ne prendre en compte que le cas CblasColMajor
+                   -de ne prendre en compte que le cas m == k == n
+                   -de ne faire que : C <- tA * B
+On procède par bloc, et on se sert du "my_dgemm_scalaire" pour faire les bloc
+@param Order : Indique si les matrices A, B et C sont stockées en CblasRowMajor ou en CblasColMajor
+@param TransA : Indique si on doit prendre la matrice A tel quel ou sa transposé
+@param TransB : Indique si on doit prendre la matrice B tel quel ou sa transposé
+@param M : Nombre de ligne de A / nombre de ligne de C
+@param N : nombre de colonne de B / nombre de colonne de C
+@param K : nombre de colonne de A / nombre de ligne de B
+@param Alpha : Scalaire alpha
+@param A : Matrice A
+@param lda : Leading dimension de A
+@param B : Matrice B
+@param ldb : Leading dimension de B
+@param beta : Scalaire beta
+@param C : Matrice C
+@param ldc : Leading dimension de C
+*/
 void my_dgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB,
               const int M, const int N, const int K,
               const double alpha, const double *A, const int lda,
@@ -346,45 +426,104 @@ void my_dgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, c
 ////////////////////////////////////////////////////////////////////////////////
 // Complétion de la bibliothèque blas
 
-///////////////////////////////////////////////////////////////////
-// On effectue l'opération Y = Y + alpha*X avec X et Y des vecteurs
-void my_cblas_daxpy(const int N, const double alpha, const double *X, const int incX, double *Y, const int incY){
-  for(int i = 0; i < N; ++i){
-    Y[i*incY] += alpha * X[i*incX];
+/**
+On effectue l'opération Y <- alpha * X + Y
+@param N : Taille des vecteurs X et Y et de la matrice carré A
+@param Alpha : Scalaire alpha
+@param X : Vecteur X
+@param incX : Leading dimension de X
+@param Y : Vecteur Y
+@param incY : Leading dimension de Y
+@return : Le résultat du produit scalaire
+*/
+void my_daxpy(const int N, const double alpha, const double *X, const int incX, double *Y, const int incY){
+  for (int i = 0; i < N; i++){
+    Y[i * incY] += alpha * X[i * incX];
   }
 }
 
-/////////////////////////////////////////////////////////////////////
-// On effectue l'opération Y = Y + A * X avec Y et X des vecteurs et A une matrice
-// ne tiens pas compte pour l'instant de alpha et beta
-void my_cblas_dgemv(const enum CBLAS_ORDER order,
-                 const enum CBLAS_TRANSPOSE TransA, const int M, const int N,
-                 const double alpha, const double *A, const int lda,
-                 const double *X, const int incX, const double beta,
-                 double *Y, const int incY){
-  if (order != CblasColMajor || TransA != CblasNoTrans || alpha != 1 || beta != 1 || M != N){
-    printf("erreur dans \"my_cblas_dgemv\" : condition de l'énoncé non respecté\n");
+/**
+On effectue l'opération Y <- alpha * (t)A * X + beta * Y
+@param Order : Indique si la matrice A est stocké en CblasRowMajor ou en CblasColMajor
+@param TransA : Indique si on doit prendre la matrice A tel quel ou sa transposé
+@param M : Nombre de ligne de A (taille de Y si A est CblasNoTrans, taille de X sinon)
+@param N : nombre de colonne de A (taille de X si A est CblasNoTrans, taille de Y sinon)
+@param Alpha : Scalaire alpha
+@param A : Matrice A
+@param lda : Leading dimension de A
+@param X : Vecteur X
+@param incX : Leading dimension de X
+@param beta : Scalaire beta
+@param Y : Vecteur Y
+@param incY : Leading dimension de Y
+*/
+void my_dgemv(const enum CBLAS_ORDER order, const enum CBLAS_TRANSPOSE TransA, const int M, const int N,
+              const double alpha, const double *A, const int lda,
+              const double *X, const int incX, const double beta,
+              double *Y, const int incY){
+  //////////////////////////////////////////////////////////////////////////////
+  // Pour cette fonction on suppose dans l'énoncé qu'on est en CblasColMajor
+  if (order != CblasColMajor || TransA == CblasConjTrans){
+    printf("erreur dans \"my_dgemv\" : condition de l'énoncé non respecté\n");
     exit(0);
   }
-  for(int i=0; i<M; i++){
-    for(int j=0; j<M; j++){
-      Y[i*incY] += A[i+j*lda] * X[j*incX];
+
+  //////////////////////////////////////////////////////////////////////////////
+  // Cas matrice A pris tel quel
+  if (TransA == CblasNoTrans){
+    for (int i = 0; i < M; i++){
+      Y[i * incY] *= beta;
+      double sum = 0.0;
+      for (int j = 0; j < N; j++){
+        sum += A[i + j * lda] * X[j * incX];
+      }
+      Y[i * incY] += alpha * sum;
+    }
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  // Cas matrice A transposée
+  else if (TransA == CblasTrans){
+    for (int i = 0; i < N; i++){
+      Y[i * incY] *= beta;
+      double sum = 0.0;
+      for (int j = 0; j < M; j++){
+        sum += A[j + i * lda] * X[j * incX];
+      }
+      Y[i * incY] += alpha * sum;
     }
   }
 }
 
-////////////////////////////////////////////////////////////////////////
-// On effectue l'opération A = A + alpha * X * tY avec A une matrice et X et Y des vecteurs
-void my_cblas_dger(const enum CBLAS_ORDER order, const int M, const int N,
-                const double alpha, const double *X, const int incX,
-                const double *Y, const int incY, double *A, const int lda){
+/**
+On effectue l'opération A <- alpha * X * tY + A
+@param Order : Indique si la matrice A est stocké en CblasRowMajor ou en CblasColMajor
+@param M : Nombre de ligne de A et taille de X
+@param N : nombre de colonne de A et taille de Y
+@param Alpha : Scalaire alpha
+@param X : Vecteur X
+@param incX : Leading dimension de X
+@param Y : Vecteur Y
+@param incY : Leading dimension de Y
+@param A : Matrice A
+@param lda : Leading dimension de A
+*/
+void my_dger(const enum CBLAS_ORDER order, const int M, const int N,
+             const double alpha, const double *X, const int incX,
+             const double *Y, const int incY,
+             double *A, const int lda){
+   //////////////////////////////////////////////////////////////////////////////
+   // Pour cette fonction on suppose dans l'énoncé qu'on est en CblasColMajor
   if (order != CblasColMajor){
-    printf("erreur dans \"my_cblas_dger\" : condition de l'énoncé non respecté\n");
+    printf("erreur dans \"my_dger\" : condition de l'énoncé non respecté\n");
     exit(0);
   }
-  for(int i=0; i<M; i++){
-    for(int j=0; j<N; j++){
-      A[i+j*lda] += alpha * X[i*incX] * Y[j*incY];
+
+  //////////////////////////////////////////////////////////////////////////////
+  // Bonne ordre de boucle pour un CblasColMajor
+  for (int j = 0; j < N; j++){
+    for (int i = 0; i < M; i++){
+      A[i + j * lda] += alpha * X[i * incX] * Y[j * incY];
     }
   }
 }
