@@ -4,12 +4,17 @@
 #compilateur
 CC=gcc
 
+#bibliothèque statique
+AR=ar
+
 #option
 CFLAGS=-Wall -Wextra -std=c99 -O3
+ARFLAGS=-rc
 
 #dossiers
 SRC_DIR=src
 BUILD=build
+LIB=lib
 GRAPHE=graphe
 
 
@@ -24,9 +29,20 @@ $(BUILD)/driver.o: $(SRC_DIR)/driver.c $(SRC_DIR)/util.h
 $(BUILD)/util.o: $(SRC_DIR)/util.c $(SRC_DIR)/util.h
 	$(CC) -o $@ $(CFLAGS) -c $<
 
-$(BUILD)/driver: $(BUILD)/driver.o $(BUILD)/util.o
-	$(CC) $^ -o $@
+$(BUILD)/myblas.o: $(SRC_DIR)/myblas.c $(SRC_DIR)/util.h $(SRC_DIR)/myblas.h
+	$(CC) -o $@ $(CFLAGS) -c $<
 
+$(BUILD)/mylapack.o: $(SRC_DIR)/mylapack.c $(SRC_DIR)/util.h $(SRC_DIR)/mylapack.h
+	$(CC) -o $@ $(CFLAGS) -c $<
+
+$(LIB)/libmyblas.a: $(BUILD)/util.o $(BUILD)/myblas.o
+	$(AR) $(ARFLAGS) $@ $^
+
+$(LIB)/libmylapack.a: $(BUILD)/util.o $(BUILD)/mylapack.o
+	$(AR) $(ARFLAGS) $@ $^
+
+$(BUILD)/driver: $(BUILD)/driver.o $(BUILD)/util.o $(LIB)/libmylapack.a $(LIB)/libmyblas.a
+	$(CC) $(BUILD)/driver.o $(BUILD)/util.o -L$(LIB)/ -lmyblas -lmylapack -o $@ 
 
 ################################################################################
 #partie exécution
@@ -55,7 +71,7 @@ $(GRAPHE): data
 .PHONY: clean clean_graphe clean_data clean_exec clean_all
 
 clean:
-	@rm -f $(BUILD)/*.o
+	@rm -f $(BUILD)/*.o $(BUILD)/*.a $(BUILD)/driver
 
 clean_graphe:
 	@rm -f $(GRAPHE)/*.png
