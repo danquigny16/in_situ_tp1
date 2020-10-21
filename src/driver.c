@@ -150,9 +150,9 @@ Fait les tests relatifs au produit de matrices my_dgemm_scalaire()
 */
 void test_my_dgemm(){
   // Nom du test
-  printf("******************************************************************************\n");
-  printf("*************** TEST PRODUIT DE MATRICES : MY_DGEMM_SCALAIRE() ***************\n");
-  printf("******************************************************************************\n\n");
+  printf("*********************************************************************\n");
+  printf("*************** TEST PRODUIT DE MATRICES : MY_DGEMM() ***************\n");
+  printf("*********************************************************************\n\n");
 
   //////////////////////////////////////////////////////////////////////////////
   // Test du produit de matrices (scalaire) : le résultat est-il correct
@@ -250,7 +250,7 @@ void test_my_dgemm(){
 
   //////////////////////////////////////////////////////////////////////////////
   // Test du produit scalaire : temps d'éxecution
-  printf("\n----- Test de temps d'execution -----\n");
+  printf("\n***** Test de temps d'execution *****\n");
 
   // Variable pour mesure du temps
   clock_t debut, fin;
@@ -275,7 +275,7 @@ void test_my_dgemm(){
     // (size_mat ligne) * (size_mat colonne) * (size_mat multiplication et size_mat - 1 addition)
     int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
     double Mflop_s = (Mflop / temps) ;
-    printf("Performance obtenu pour des matrice de taille %7d^2 : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
+    printf("Performance obtenu pour des matrices de taille %7d ordre kij : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
 
     // Libération mémoire des matrices
     free_matrice(A);
@@ -303,7 +303,7 @@ void test_my_dgemm(){
     int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
     double Mflop_s = (Mflop / temps) ;
 
-    printf("Performance obtenu pour des matrice de taille %7d^2 : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
+    printf("Performance obtenu pour des matrices de taille %7d ordre ijk : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
 
     // Libération mémoire des matrices
     free_matrice(A);
@@ -331,7 +331,62 @@ void test_my_dgemm(){
     int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
     double Mflop_s = (Mflop / temps) ;
 
-    printf("Performance obtenu pour des matrice de taille %7d^2 : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
+    printf("Performance obtenu pour des matrices de taille %7d ordre jik : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
+
+    // Libération mémoire des matrices
+    free_matrice(A);
+    free_matrice(B);
+    free_matrice(C);
+  }
+
+  // Tests pour des tailles de matrices croissantes avec l'ordre kji
+  printf("\nTest dgemm avec l'ordre kji :\n\n");
+  for (int size_mat = 1000; size_mat <= 2000; size_mat += 200){
+    // Allocation mémoire des matrices
+    A = matrice(size_mat, size_mat);
+    B = matrice(size_mat, size_mat);
+    C = matrice(size_mat, size_mat);
+    matrice_zero(size_mat, size_mat, size_mat, C);
+
+    // Produit de matrices
+    debut = clock();
+    my_dgemm_scalaire_kji(CblasColMajor, CblasTrans, CblasNoTrans, size_mat, size_mat, size_mat, 1, A, 5, B, 5, 0, C, 5);
+    fin = clock();
+
+    // Affichage des performances
+    double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    // (size_mat ligne) * (size_mat colonne) * (size_mat multiplication et size_mat - 1 addition)
+    int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
+    double Mflop_s = (Mflop / temps) ;
+    printf("Performance obtenu pour des matrices de taille %7d ordre kji : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
+
+    // Libération mémoire des matrices
+    free_matrice(A);
+    free_matrice(B);
+    free_matrice(C);
+  }
+
+  // Tests pour des tailles de matrices croissantes avec l'ordre jik
+  printf("\nTest dgemm avec l'ordre jik et boucle for déroulée:\n\n");
+  for (int size_mat = 1000; size_mat <= 2000; size_mat += 200){
+    // Allocation mémoire des matrices
+    A = matrice(size_mat, size_mat);
+    B = matrice(size_mat, size_mat);
+    C = matrice(size_mat, size_mat);
+    matrice_zero(size_mat, size_mat, size_mat, C);
+
+    // Produit de matrices
+    debut = clock();
+    my_dgemm_scalaire_jik_unroll(CblasColMajor, CblasTrans, CblasNoTrans, size_mat, size_mat, size_mat, 1, A, 5, B, 5, 0, C, 5);
+    fin = clock();
+
+    // Affichage des performances
+    double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    // (size_mat ligne) * (size_mat colonne) * (size_mat multiplication et size_mat - 1 addition)
+    int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
+    double Mflop_s = (Mflop / temps) ;
+
+    printf("Performance obtenu pour des matrices de taille %7d ordre jik unroll: %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
 
     // Libération mémoire des matrices
     free_matrice(A);
@@ -341,7 +396,7 @@ void test_my_dgemm(){
 
   // Tests pour des tailles de matrices croissantes
   printf("\nTest dgemm par bloc :\n\n");
-  for (int size_mat = 200; size_mat <= 2000; size_mat += 200){
+  for (int size_mat = 1000; size_mat <= 2000; size_mat += 200){
     // Allocation mémoire des matrices
     A = matrice(size_mat, size_mat);
     B = matrice(size_mat, size_mat);
@@ -359,7 +414,7 @@ void test_my_dgemm(){
     int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
     double Mflop_s = (Mflop / temps) ;
 
-    printf("Performance obtenu pour des matrice de taille %7d^2 : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
+    printf("Performance obtenu pour des matrices de taille %7d par bloc : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
 
     // Libération mémoire des matrices
     free_matrice(A);
@@ -402,7 +457,7 @@ void test_blas(){
   printf("\n----- Resultat attendue -----\n\n");
   printf("[ 3  6  9 12 15]\n");
 
-  my_cblas_daxpy(5, 2, vec1, 1, vec2, 1);
+  my_daxpy(5, 2, vec1, 1, vec2, 1);
   printf("\n----- Resultat obtenue -----\n\n");
   affiche_vecteur(5, vec2, 1, stdout);
 
@@ -437,7 +492,7 @@ void test_blas(){
   printf("\n----- Resultat attendue -----\n\n");
   printf("[ 56 132 208 284 360]\n");
 
-  my_cblas_dgemv(CblasColMajor, CblasNoTrans, 5, 5, 1, mat, 5, vec1, 1, 1, vec2, 1);
+  my_dgemv(CblasColMajor, CblasNoTrans, 5, 5, 1, mat, 5, vec1, 1, 1, vec2, 1);
   printf("\n----- Resultat obtenue -----\n\n");
   affiche_vecteur(5, vec2, 1, stdout);
 
@@ -477,7 +532,7 @@ void test_blas(){
   printf(" [24 33 42 51 60]\n");
   printf(" [31 42 53 64 75]]\n");
 
-  my_cblas_dger(CblasColMajor, 5, 5, 2, vec1, 1, vec2, 1, mat, 5);
+  my_dger(CblasColMajor, 5, 5, 2, vec1, 1, vec2, 1, mat, 5);
   printf("\n----- Resultat obtenue -----\n\n");
   affiche(5, 5, mat, 5, stdout);
 
@@ -492,7 +547,7 @@ void test_blas(){
 }
 
 /**
-Fait les tests relatifs aux allocation et libération mémoire de matrices et de vecteurs
+Fait les tests relatifs à la factorisation LU
 */
 void test_factorisation_LU(){
   // Nom du test
@@ -509,7 +564,7 @@ void test_factorisation_LU(){
   // Notre init_matrice donne des divisions par zéro, on l'évite
   init_2_matrice(5, 5, 5, mat);
 
-    // Affichage des résultats
+  // Affichage des résultats
   printf("\n----- Matrice -----\n\n");
   affiche(5, 5, mat, 5, stdout);
 
@@ -523,10 +578,7 @@ void test_factorisation_LU(){
   printf("\n [0.00740624]\n");
   printf("\n [0.0069124 ]]\n");
 
-
-
-
-  my_cblas_dgesv(CblasColMajor, 5, mat, 5, vec, 1);
+  my_dgesv(CblasColMajor, 5, mat, 5, vec, 1);
   printf("\n----- Resultat obtenue -----\n\n");
   affiche_vecteur(5, vec, 1, stdout);
 
@@ -543,11 +595,11 @@ void test_factorisation_LU(){
 // Main
 
 int main(/*int argc, char ** argv*/){
-  //test_alloc_et_free();
-  //test_initialisation();
-  //test_my_ddot();
-  //test_my_dgemm();
-  //test_blas();
+  test_alloc_et_free();
+  test_initialisation();
+  test_my_ddot();
+  test_my_dgemm();
+  test_blas();
   test_factorisation_LU();
 
   return 0;

@@ -16,6 +16,7 @@ make clean : efface les fichiers objets
 make clean_graphe :  efface les graphes  
 make clean_data : efface les fichiers contenant les données du graphes  
 make clean_exec : efface l'exécutable et les fichiers objets  
+make clean_result : efface le fichier texte contenant les données nécessaire à la construction des graphes  
 make clean_all : efface l'exécutable, les fichiers objets, les fichiers contenant les données du graphes et les graphes
 
 ### Architecture
