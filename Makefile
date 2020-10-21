@@ -72,7 +72,7 @@ $(GRAPHE): data
 .PHONY: clean clean_graphe clean_data clean_exec clean_all
 
 clean:
-	@rm -f $(BUILD)/*.o $(BUILD)/*.a $(BUILD)/driver
+	@rm -f $(BUILD)/*.o $(LIB)/*.a $(BUILD)/driver
 
 clean_graphe:
 	@rm -f $(GRAPHE)/*.png

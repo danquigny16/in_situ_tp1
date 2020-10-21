@@ -1,0 +1,10 @@
+#!/bin/sh
+
+#SBATCH -p mistral
+#SBATCH --job-name=job-pierre
+#SBATCH -o result.slurm.out
+#SBATCH -e result.slurm.err
+module load compiler/gcc/9.1.0
+module load language/python/3.5.9
+make && make graphe
+./build/driver
