@@ -132,6 +132,18 @@ void test_my_ddot(){
     double Mflop_s = (flop / temps) / 1000000.0;
     printf("Performance obtenu pour des vecteurs de taille %7d : %10.6f Mflop/s\n", m, Mflop_s);
 
+    debut = clock();
+    my_ddot_unroll(m, vec1, 1, vec2, 1);
+    fin = clock();
+
+    // Affichage des performances
+    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    flop = (double) (2 * m - 1); // m multiplication et m-1 addition
+    Mflop_s = (flop / temps) / 1000000.0;
+    printf("Performance obtenu pour des vecteurs de taille %7d avec unroll : %10.6f Mflop/s\n", m, Mflop_s);
+
+
+
     // Libération mémoire des précédents vecteurs
     free_vecteur(vec1);
     free_vecteur(vec2);
@@ -598,7 +610,7 @@ int main(/*int argc, char ** argv*/){
   test_alloc_et_free();
   test_initialisation();
   test_my_ddot();
-  test_my_dgemm();
+  //test_my_dgemm();
   test_blas();
   test_factorisation_LU();
 

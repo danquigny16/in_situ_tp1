@@ -34,6 +34,7 @@ void init_2_matrice(int m, int n, int lda, double *a);
 // Produit scalaire
 
 double my_ddot(const int N, const double *X, const int incX, const double *Y, const int incY);
+double my_ddot_unroll(const int N, const double *X, const int incX, const double *Y, const int incY);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Produit de matrices
@@ -54,15 +55,15 @@ void my_dgemm_scalaire_jik(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSP
                            const double *B, const int ldb,
                            const double beta, double *C, const int ldc);
 void my_dgemm_scalaire_kji(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB,
-                       const int M, const int N, const int K,
-                       const double alpha, const double *A, const int lda,
-                       const double *B, const int ldb,
-                       const double beta, double *C, const int ldc);
-void my_dgemm_scalaire_jik_unroll(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB,
                            const int M, const int N, const int K,
                            const double alpha, const double *A, const int lda,
                            const double *B, const int ldb,
                            const double beta, double *C, const int ldc);
+void my_dgemm_scalaire_jik_unroll(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB,
+                                  const int M, const int N, const int K,
+                                  const double alpha, const double *A, const int lda,
+                                  const double *B, const int ldb,
+                                  const double beta, double *C, const int ldc);
 void my_dgemm_scalaire(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB,
                        const int M, const int N, const int K,
                        const double alpha, const double *A, const int lda,

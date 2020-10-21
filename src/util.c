@@ -224,6 +224,18 @@ double my_ddot(const int N, const double *X, const int incX, const double *Y, co
   return res;
 }
 
+double my_ddot_unroll(const int N, const double *X, const int incX, const double *Y, const int incY){
+  int res = 0;
+
+  if(N%2 != 0){return my_ddot(N,X,incX,Y,incY);}
+
+  for (int i = 0; i < N; i+=2){
+    res += X[i*incX] * Y[i*incY];
+    res += X[(i+1)*incX] * Y[(i+2)*incY];
+  }
+
+  return res;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Produit de matrices
@@ -423,9 +435,9 @@ Ici on fait les 3 boucle for dans l'ordre (k,j,i)
 */
 void my_dgemm_scalaire_kji(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB,
                            const int M, const int N, const int K,
-                       const double alpha, const double *A, const int lda,
-                       const double *B, const int ldb,
-                       const double beta, double *C, const int ldc){
+                           const double alpha, const double *A, const int lda,
+                           const double *B, const int ldb,
+                           const double beta, double *C, const int ldc){
   //////////////////////////////////////////////////////////////////////////////
   // Pour cette fonction on suppose dans l'énoncé qu'on est en CblasColMajor, qu'on prend la transposé de A,
   // qu'on laisse B tel quel, que l'on manipule des matrices carrés m*m, que alpha vaut 1 et beta 0,
