@@ -132,27 +132,6 @@ void vecteur_zero(int n, int lda, double *v){
 }
 
 /**
-Transforme la matrice en une matrice nulle avec une diagonale remplie de 2
-@param m : hauteur
-@param n : largeur
-@param a : matrice
-*/
-void matrice_diag_2(int m, int n, int lda, double *a){
-  // ligne
-  for (int i = 0; i < m; i++){
-    // colonne
-    for (int j = 0; j < n; j++){
-      if (i == j){
-        a[i + j * lda] = 2.0;
-      }
-      else{
-        a[i + j * lda] = 0.0;
-      }
-    }
-  }
-}
-
-/**
 initialise la matrice en allant de 1.0 à m*n, de gauche à droite puis de haut en bas
 @param m : hauteur
 @param n : largeur
@@ -180,6 +159,22 @@ void init_vecteur(int n, int lda, double *v){
   for (int i = 0; i < n; i++){
     v[i * lda] = val;
     val++;
+  }
+}
+
+/**
+Initialise la matrice pour le test de résolution Ax = b, l'initialisation 1 engendre des divisions par 0
+@param m : hauteur
+@param n : largeur
+@param a : matrice
+*/
+void init_2_matrice(int m, int n, int lda, double *a){
+  // Initialisation habituelle
+  init_matrice(m, n, lda, a);
+
+  // Augmentation des valeur de la diagonale pour éviter les valeurs nulles
+  for (int i = 0; i < m; i++){
+    a[i + i * lda] *= 20.0;
   }
 }
 
@@ -509,7 +504,11 @@ void my_dgetf2(const enum CBLAS_ORDER Order, int m, int n, double* a, int lda){
   }
   for(int i=0; i<m; i++){
     for(int j=i+1; j<n; j++){
-      a[j+i*lda] /= a[i+i*lda];
+      double diag = a[i+i*lda];
+      if (diag == 0.0){
+        printf("ouille ouille ouille : division par zero durant la decomposition LU (my_dgetf2)\n");
+      }
+      a[j+i*lda] /= diag;
       for(int k=i+1; k<n; k++){
         a[j+k*lda] -= a[j+i*lda] * a[i+k*lda];
       }
@@ -520,28 +519,56 @@ void my_dgetf2(const enum CBLAS_ORDER Order, int m, int n, double* a, int lda){
 //////////////////////////////////////////////////////////////////////////////
 // Résolution de système triangulaire LX = B
 void my_cblas_dtrsm(const enum CBLAS_ORDER Order, const int M, const int N, const double *A, const int lda, double *B, const int ldb){
-  if (Order != CblasColMajor){
+  if (Order != CblasColMajor || M != N){
     printf("erreur dans \"my_cblas_dtrsm\" : condition de l'énoncé non respecté\n");
     exit(0);
   }
-  int sum;
-  B[M-1] /= A[(M-1) + (M-1) * lda];
-  for(int i = M-2; i > -1; i--){
+  //int sum;
+  //B[(M-1) * ldb] /= A[(M-1) + (M-1) * lda];
+  //for(int i = M-2; i >= 0; i--){
+  /*
+  for(int i = M-1; i >= 0; i--){
     sum = 0;
     for(int j = N-1; j > i; j--){
-      sum += A[i+j*lda] * B[j];
+      sum += A[i+j*lda] * B[j * ldb];
     }
-    B[i] = (B[i] - sum)/A[i+i*lda];
+    B[i * ldb] = (B[i * ldb] - sum)/A[i+i*lda];
+  }
+  */
+
+  // L(Ux) = Ly = b
+  // colonne
+  for (int j = 0; j < N; j++){
+    // Pas besoin de """B[j * ldb] /= A[j + j * lda];""" car """A[j + j * lda] == 1""" quand on est dans le cas Ly = b
+    // On considère L matrice STRICTEMENT triangulaire inférieure, i.e avec des 1 sur la diagonale
+    // ligne
+    for (int i = j + 1; i < N; i++){
+      B[i * ldb] -= A[i + j * lda] * B[j * ldb];
+    }
+  }
+
+  // Ux = y
+  // colonne
+  for (int j = N - 1; j >= 0; j--){
+    double diag = A[j + j * lda];
+    if (diag == 0.0){
+      printf("aie aie aie : division par zero durant la résolution Ux = y (my_cblas_dtrsm)\n");
+    }
+    B[j * ldb] /= diag;
+    // ligne
+    for (int i = j - 1; i >= 0; i--){
+      B[i * ldb] -= A[i + j * lda] * B[j * ldb];
+    }
   }
 }
 
 //////////////////////////////////////////////////////////////////////////
 // résolution de système linéaire A*X = B
 void my_cblas_dgesv(const enum CBLAS_ORDER Order, const int N, double *A, const int lda, double *B, const int ldb){
-     if (Order != CblasColMajor){
-       printf("erreur dans \"my_cblas_dtrsm\" : condition de l'énoncé non respecté\n");
-       exit(0);
-     }
-     my_dgetf2(Order, N, N, A, lda);
-     my_cblas_dtrsm(Order, N, N, A, lda, B, ldb);
+  if (Order != CblasColMajor){
+    printf("erreur dans \"my_cblas_dtrsm\" : condition de l'énoncé non respecté\n");
+    exit(0);
+  }
+  my_dgetf2(Order, N, N, A, lda);
+  my_cblas_dtrsm(Order, N, N, A, lda, B, ldb);
 }

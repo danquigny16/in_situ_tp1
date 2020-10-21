@@ -506,8 +506,8 @@ void test_factorisation_LU(){
 
   // Initialisation des deux vecteurs
   init_vecteur(5, 1, vec);
-  //init_matrice(5, 5, 5, mat);
-  matrice_diag_2(5, 5, 5, mat);
+  // Notre init_matrice donne des divisions par zéro, on l'évite
+  init_2_matrice(5, 5, 5, mat);
 
     // Affichage des résultats
   printf("\n----- Matrice -----\n\n");
@@ -517,11 +517,14 @@ void test_factorisation_LU(){
   affiche_vecteur(5, vec, 1, stdout);
 
   printf("\n----- Resultat attendue -----\n\n");
-  printf("\n[[0.5]\n");
-  printf("\n [1. ]\n");
-  printf("\n [1.5]\n");
-  printf("\n [2. ]\n");
-  printf("\n [2.5]]\n");
+  printf("\n[[0.0444439 ]\n");
+  printf("\n [0.01093364]\n");
+  printf("\n [0.00835592]\n");
+  printf("\n [0.00740624]\n");
+  printf("\n [0.0069124 ]]\n");
+
+
+
 
   my_cblas_dgesv(CblasColMajor, 5, mat, 5, vec, 1);
   printf("\n----- Resultat obtenue -----\n\n");
@@ -540,11 +543,11 @@ void test_factorisation_LU(){
 // Main
 
 int main(/*int argc, char ** argv*/){
-  test_alloc_et_free();
-  test_initialisation();
-  test_my_ddot();
-  test_my_dgemm();
-  test_blas();
+  //test_alloc_et_free();
+  //test_initialisation();
+  //test_my_ddot();
+  //test_my_dgemm();
+  //test_blas();
   test_factorisation_LU();
 
   return 0;
