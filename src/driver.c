@@ -3,6 +3,8 @@
 #include <time.h>
 
 #include "util.h"
+#include "myblas.h"
+#include "mylapack.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -379,7 +381,7 @@ void test_my_dgemm(){
   }
 
   // Tests pour des tailles de matrices croissantes avec l'ordre jik
-  printf("\nTest dgemm avec l'ordre jik et boucle for déroulée:\n\n");
+  printf("\nTest dgemm avec l'ordre kji et boucle for déroulée:\n\n");
   for (int size_mat = 1000; size_mat <= 2000; size_mat += 200){
     // Allocation mémoire des matrices
     A = matrice(size_mat, size_mat);
