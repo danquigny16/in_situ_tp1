@@ -206,6 +206,18 @@ double my_ddot(const int N, const double *X, const int incX, const double *Y, co
   return res;
 }
 
+double my_ddot_unroll(const int N, const double *X, const int incX, const double *Y, const int incY){
+  int res = 0;
+
+  if(N%2 != 0){return my_ddot(N,X,incX,Y,incY);}
+
+  for (int i = 0; i < N; i+=2){
+    res += X[i*incX] * Y[i*incY];
+    res += X[(i+1)*incX] * Y[(i+2)*incY];
+  }
+
+  return res;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Produit de matrices

@@ -28,6 +28,7 @@ void init_vecteur(int n, int lda, double *v);
 ////////////////////////////////////////////////////////////////////////////////
 
 double my_ddot(const int N, const double *X, const int incX, const double *Y, const int incY);
+double my_ddot_unroll(const int N, const double *X, const int incX, const double *Y, const int incY);
 
 ////////////////////////////////////////////////////////////////////////////////
 
