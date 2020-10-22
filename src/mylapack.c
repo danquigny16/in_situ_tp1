@@ -55,10 +55,10 @@ Ne gère pas les cas où il y a des division par 0
 @param lda : Leading dimension de B
 */
 void my_dtrsm(const enum CBLAS_ORDER Order, const enum CBLAS_SIDE Side,
-                 const enum CBLAS_UPLO Uplo, const enum CBLAS_TRANSPOSE TransA,
-                 const enum CBLAS_DIAG Diag, const int M, const int N,
-                 const double alpha, const double *A, const int lda,
-                 double *B, const int ldb){
+              const enum CBLAS_UPLO Uplo, const enum CBLAS_TRANSPOSE TransA,
+              const enum CBLAS_DIAG Diag, const int M, const int N,
+              const double alpha, const double *A, const int lda,
+              double *B, const int ldb){
   //////////////////////////////////////////////////////////////////////////////
   // Pour cette fonction on suppose dans l'énoncé qu'on est en CblasColMajor
   if (Order != CblasColMajor || Side != CblasLeft || TransA != CblasNoTrans || alpha != 1 || M != N ||

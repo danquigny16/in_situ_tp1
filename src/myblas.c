@@ -22,6 +22,15 @@ double my_ddot(const int N, const double *X, const int incX, const double *Y, co
   return res;
 }
 
+/**
+Effectue le produit scalaire entre les vecteurs X et Y
+@param N Nombre d'éléments des vecteurs X et Y
+@param X Vecteur X
+@param incX leading dimension de  X
+@param Y Vecteur Y
+@param incY leading dimension de  Y
+@return : Le résultat du produit scalaire
+*/
 double my_ddot_unroll(const int N, const double *X, const int incX, const double *Y, const int incY){
   int res = 0;
 
