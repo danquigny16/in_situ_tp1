@@ -1,0 +1,494 @@
+**************************************************
+*************** TEST ALLOC ET FREE ***************
+**************************************************
+
+----- Matrice -----
+
+0.000000  0.000000  0.000000  0.000000  
+0.000000  0.000000  0.000000  0.000000  
+0.000000  0.000000  0.000000  0.000000  
+
+----- Vecteur -----
+
+0.000000
+0.000000
+0.000000
+0.000000
+0.000000
+
+***************************************************
+*************** TEST INITIALISATION ***************
+***************************************************
+
+----- Matrice -----
+
+1.000000  2.000000  3.000000  4.000000  
+5.000000  6.000000  7.000000  8.000000  
+9.000000  10.000000  11.000000  12.000000  
+
+----- On met 42.0 à la position (1,3) -----
+
+1.000000  2.000000  3.000000  4.000000  
+5.000000  6.000000  7.000000  42.000000  
+9.000000  10.000000  11.000000  12.000000  
+
+----- Vecteur -----
+
+1.000000
+2.000000
+3.000000
+4.000000
+5.000000
+
+----- On met 42.0 à la position 2 -----
+
+1.000000
+2.000000
+42.000000
+4.000000
+5.000000
+
+*******************************************************************
+*************** TEST PRODUIT SCALAIRE : MY_DDOT() *****************
+*******************************************************************
+
+----- Test de resultat -----
+
+Vecteur 1
+
+1.000000
+2.000000
+3.000000
+4.000000
+5.000000
+
+Vecteur 2
+
+1.000000
+2.000000
+3.000000
+4.000000
+5.000000
+
+Resultat du produit scalaire (attendue 55) : 55.000000
+
+----- Test de temps d'execution -----
+
+Performance obtenu pour des vecteurs de taille      50 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille      50 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille      62 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille      62 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille      77 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille      77 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille      96 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille      96 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille     120 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille     120 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille     150 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille     150 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille     187 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille     187 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille     233 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille     233 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille     291 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille     291 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille     363 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille     363 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille     453 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille     453 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille     566 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille     566 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille     707 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille     707 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille     883 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille     883 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille    1103 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille    1103 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille    1378 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille    1378 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille    1722 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille    1722 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille    2152 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille    2152 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille    2690 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille    2690 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille    3362 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille    3362 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille    4202 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille    4202 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille    5252 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille    5252 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille    6565 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille    6565 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille    8206 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille    8206 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille   10257 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille   10257 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille   12821 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille   12821 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille   16026 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille   16026 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille   20032 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille   20032 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille   25040 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille   25040 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille   31300 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille   31300 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille   39125 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille   39125 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille   48906 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille   48906 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille   61132 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille   61132 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille   76415 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille   76415 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille   95518 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille   95518 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille  119397 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille  119397 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille  149246 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille  149246 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille  186557 :  37.311300 Mflop/s
+Performance obtenu pour des vecteurs de taille  186557 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille  233196 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille  233196 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille  291495 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille  291495 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille  364368 :  72.873500 Mflop/s
+Performance obtenu pour des vecteurs de taille  364368 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille  455460 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille  455460 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille  569325 : 113.864900 Mflop/s
+Performance obtenu pour des vecteurs de taille  569325 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille  711656 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille  711656 avec unroll : 142.331100 Mflop/s
+Performance obtenu pour des vecteurs de taille  889570 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille  889570 avec unroll : 177.913900 Mflop/s
+
+*********************************************************************
+*************** TEST PRODUIT DE MATRICES : MY_DGEMM() ***************
+*********************************************************************
+
+***** Test de resultat (scalaire) *****
+
+----- Matrice A -----
+
+1.000000  2.000000  3.000000  4.000000  5.000000  
+6.000000  7.000000  8.000000  9.000000  10.000000  
+11.000000  12.000000  13.000000  14.000000  15.000000  
+16.000000  17.000000  18.000000  19.000000  20.000000  
+21.000000  22.000000  23.000000  24.000000  25.000000  
+
+----- Matrice B -----
+
+1.000000  2.000000  3.000000  4.000000  5.000000  
+6.000000  7.000000  8.000000  9.000000  10.000000  
+11.000000  12.000000  13.000000  14.000000  15.000000  
+16.000000  17.000000  18.000000  19.000000  20.000000  
+21.000000  22.000000  23.000000  24.000000  25.000000  
+
+----- Resultat attendue -----
+
+[[ 855  910  965 1020 1075]
+ [ 910  970 1030 1090 1150]
+ [ 965 1030 1095 1160 1225]
+ [1020 1090 1160 1230 1300]
+ [1075 1150 1225 1300 1375]]
+
+----- Matrice (scalaire) C = A * B -----
+
+855.000000  910.000000  965.000000  1020.000000  1075.000000  
+910.000000  970.000000  1030.000000  1090.000000  1150.000000  
+965.000000  1030.000000  1095.000000  1160.000000  1225.000000  
+1020.000000  1090.000000  1160.000000  1230.000000  1300.000000  
+1075.000000  1150.000000  1225.000000  1300.000000  1375.000000  
+
+----- Matrice (ordre kij) C = A * B -----
+
+855.000000  910.000000  965.000000  1020.000000  1075.000000  
+910.000000  970.000000  1030.000000  1090.000000  1150.000000  
+965.000000  1030.000000  1095.000000  1160.000000  1225.000000  
+1020.000000  1090.000000  1160.000000  1230.000000  1300.000000  
+1075.000000  1150.000000  1225.000000  1300.000000  1375.000000  
+
+----- Matrice (ordre ijk) C = A * B -----
+
+855.000000  910.000000  965.000000  1020.000000  1075.000000  
+910.000000  970.000000  1030.000000  1090.000000  1150.000000  
+965.000000  1030.000000  1095.000000  1160.000000  1225.000000  
+1020.000000  1090.000000  1160.000000  1230.000000  1300.000000  
+1075.000000  1150.000000  1225.000000  1300.000000  1375.000000  
+
+----- Matrice (ordre jik) C = A * B -----
+
+855.000000  910.000000  965.000000  1020.000000  1075.000000  
+910.000000  970.000000  1030.000000  1090.000000  1150.000000  
+965.000000  1030.000000  1095.000000  1160.000000  1225.000000  
+1020.000000  1090.000000  1160.000000  1230.000000  1300.000000  
+1075.000000  1150.000000  1225.000000  1300.000000  1375.000000  
+
+***** Test de resultat (par blocs) *****
+
+----- Matrice A -----
+
+1.000000  2.000000  3.000000  4.000000  5.000000  6.000000  7.000000  8.000000  9.000000  10.000000  
+11.000000  12.000000  13.000000  14.000000  15.000000  16.000000  17.000000  18.000000  19.000000  20.000000  
+21.000000  22.000000  23.000000  24.000000  25.000000  26.000000  27.000000  28.000000  29.000000  30.000000  
+31.000000  32.000000  33.000000  34.000000  35.000000  36.000000  37.000000  38.000000  39.000000  40.000000  
+41.000000  42.000000  43.000000  44.000000  45.000000  46.000000  47.000000  48.000000  49.000000  50.000000  
+51.000000  52.000000  53.000000  54.000000  55.000000  56.000000  57.000000  58.000000  59.000000  60.000000  
+61.000000  62.000000  63.000000  64.000000  65.000000  66.000000  67.000000  68.000000  69.000000  70.000000  
+71.000000  72.000000  73.000000  74.000000  75.000000  76.000000  77.000000  78.000000  79.000000  80.000000  
+81.000000  82.000000  83.000000  84.000000  85.000000  86.000000  87.000000  88.000000  89.000000  90.000000  
+91.000000  92.000000  93.000000  94.000000  95.000000  96.000000  97.000000  98.000000  99.000000  100.000000  
+
+----- Matrice B -----
+
+1.000000  2.000000  3.000000  4.000000  5.000000  6.000000  7.000000  8.000000  9.000000  10.000000  
+11.000000  12.000000  13.000000  14.000000  15.000000  16.000000  17.000000  18.000000  19.000000  20.000000  
+21.000000  22.000000  23.000000  24.000000  25.000000  26.000000  27.000000  28.000000  29.000000  30.000000  
+31.000000  32.000000  33.000000  34.000000  35.000000  36.000000  37.000000  38.000000  39.000000  40.000000  
+41.000000  42.000000  43.000000  44.000000  45.000000  46.000000  47.000000  48.000000  49.000000  50.000000  
+51.000000  52.000000  53.000000  54.000000  55.000000  56.000000  57.000000  58.000000  59.000000  60.000000  
+61.000000  62.000000  63.000000  64.000000  65.000000  66.000000  67.000000  68.000000  69.000000  70.000000  
+71.000000  72.000000  73.000000  74.000000  75.000000  76.000000  77.000000  78.000000  79.000000  80.000000  
+81.000000  82.000000  83.000000  84.000000  85.000000  86.000000  87.000000  88.000000  89.000000  90.000000  
+91.000000  92.000000  93.000000  94.000000  95.000000  96.000000  97.000000  98.000000  99.000000  100.000000  
+
+----- Resultat attendue -----
+
+[[29410 29870 30330 30790 31250 31710 32170 32630 33090 33550]
+ [29870 30340 30810 31280 31750 32220 32690 33160 33630 34100]
+ [30330 30810 31290 31770 32250 32730 33210 33690 34170 34650]
+ [30790 31280 31770 32260 32750 33240 33730 34220 34710 35200]
+ [31250 31750 32250 32750 33250 33750 34250 34750 35250 35750]
+ [31710 32220 32730 33240 33750 34260 34770 35280 35790 36300]
+ [32170 32690 33210 33730 34250 34770 35290 35810 36330 36850]
+ [32630 33160 33690 34220 34750 35280 35810 36340 36870 37400]
+ [33090 33630 34170 34710 35250 35790 36330 36870 37410 37950]
+ [33550 34100 34650 35200 35750 36300 36850 37400 37950 38500]]
+
+----- Matrice (par bloc) C = A * B -----
+
+29410.000000  29870.000000  30330.000000  30790.000000  31250.000000  31710.000000  32170.000000  32630.000000  33090.000000  33550.000000  
+29870.000000  30340.000000  30810.000000  31280.000000  31750.000000  32220.000000  32690.000000  33160.000000  33630.000000  34100.000000  
+30330.000000  30810.000000  31290.000000  31770.000000  32250.000000  32730.000000  33210.000000  33690.000000  34170.000000  34650.000000  
+30790.000000  31280.000000  31770.000000  32260.000000  32750.000000  33240.000000  33730.000000  34220.000000  34710.000000  35200.000000  
+31250.000000  31750.000000  32250.000000  32750.000000  33250.000000  33750.000000  34250.000000  34750.000000  35250.000000  35750.000000  
+31710.000000  32220.000000  32730.000000  33240.000000  33750.000000  34260.000000  34770.000000  35280.000000  35790.000000  36300.000000  
+32170.000000  32690.000000  33210.000000  33730.000000  34250.000000  34770.000000  35290.000000  35810.000000  36330.000000  36850.000000  
+32630.000000  33160.000000  33690.000000  34220.000000  34750.000000  35280.000000  35810.000000  36340.000000  36870.000000  37400.000000  
+33090.000000  33630.000000  34170.000000  34710.000000  35250.000000  35790.000000  36330.000000  36870.000000  37410.000000  37950.000000  
+33550.000000  34100.000000  34650.000000  35200.000000  35750.000000  36300.000000  36850.000000  37400.000000  37950.000000  38500.000000  
+
+***** Test de temps d'execution *****
+
+Test dgemm avec l'ordre kij :
+
+Performance obtenu pour des matrices de taille    1000 ordre kij : 989.603960 Mflop/s pour un temps de 2.020000 s
+Performance obtenu pour des matrices de taille    1200 ordre kij : 685.428571 Mflop/s pour un temps de 3.500000 s
+Performance obtenu pour des matrices de taille    1400 ordre kij : 499.821429 Mflop/s pour un temps de 5.600000 s
+Performance obtenu pour des matrices de taille    1600 ordre kij : 383.113772 Mflop/s pour un temps de 8.350000 s
+Performance obtenu pour des matrices de taille    1800 ordre kij : 300.166806 Mflop/s pour un temps de 11.990000 s
+Performance obtenu pour des matrices de taille    2000 ordre kij : 962.454874 Mflop/s pour un temps de 16.620000 s
+
+Test dgemm avec l'ordre ijk :
+
+Performance obtenu pour des matrices de taille    1000 ordre ijk : 1638.524590 Mflop/s pour un temps de 1.220000 s
+Performance obtenu pour des matrices de taille    1200 ordre ijk : 1142.380952 Mflop/s pour un temps de 2.100000 s
+Performance obtenu pour des matrices de taille    1400 ordre ijk : 838.023952 Mflop/s pour un temps de 3.340000 s
+Performance obtenu pour des matrices de taille    1600 ordre ijk : 641.082164 Mflop/s pour un temps de 4.990000 s
+Performance obtenu pour des matrices de taille    1800 ordre ijk : 506.901408 Mflop/s pour un temps de 7.100000 s
+Performance obtenu pour des matrices de taille    2000 ordre ijk : 1642.299795 Mflop/s pour un temps de 9.740000 s
+
+Test dgemm avec l'ordre jik :
+
+Performance obtenu pour des matrices de taille    1000 ordre jik : 1638.524590 Mflop/s pour un temps de 1.220000 s
+Performance obtenu pour des matrices de taille    1200 ordre jik : 1142.380952 Mflop/s pour un temps de 2.100000 s
+Performance obtenu pour des matrices de taille    1400 ordre jik : 835.522388 Mflop/s pour un temps de 3.350000 s
+Performance obtenu pour des matrices de taille    1600 ordre jik : 641.082164 Mflop/s pour un temps de 4.990000 s
+Performance obtenu pour des matrices de taille    1800 ordre jik : 506.901408 Mflop/s pour un temps de 7.100000 s
+Performance obtenu pour des matrices de taille    2000 ordre jik : 1640.615385 Mflop/s pour un temps de 9.750000 s
+
+Test dgemm avec l'ordre kji :
+
+Performance obtenu pour des matrices de taille    1000 ordre kji : 1999.000000 Mflop/s pour un temps de 1.000000 s
+Performance obtenu pour des matrices de taille    1200 ordre kji : 1445.180723 Mflop/s pour un temps de 1.660000 s
+Performance obtenu pour des matrices de taille    1400 ordre kji : 1093.359375 Mflop/s pour un temps de 2.560000 s
+Performance obtenu pour des matrices de taille    1600 ordre kji : 850.797872 Mflop/s pour un temps de 3.760000 s
+Performance obtenu pour des matrices de taille    1800 ordre kji : 694.787645 Mflop/s pour un temps de 5.180000 s
+Performance obtenu pour des matrices de taille    2000 ordre kji : 2272.159091 Mflop/s pour un temps de 7.040000 s
+
+Test dgemm avec l'ordre kji et boucle for déroulée:
+
+Performance obtenu pour des matrices de taille    1000 ordre jik unroll: 1652.066116 Mflop/s pour un temps de 1.210000 s
+Performance obtenu pour des matrices de taille    1200 ordre jik unroll: 1147.846890 Mflop/s pour un temps de 2.090000 s
+Performance obtenu pour des matrices de taille    1400 ordre jik unroll: 840.540541 Mflop/s pour un temps de 3.330000 s
+Performance obtenu pour des matrices de taille    1600 ordre jik unroll: 643.661972 Mflop/s pour un temps de 4.970000 s
+Performance obtenu pour des matrices de taille    1800 ordre jik unroll: 508.333333 Mflop/s pour un temps de 7.080000 s
+Performance obtenu pour des matrices de taille    2000 ordre jik unroll: 1647.373841 Mflop/s pour un temps de 9.710000 s
+
+Test dgemm par bloc :
+
+Performance obtenu pour des matrices de taille    1000 par bloc : 2324.418605 Mflop/s pour un temps de 0.860000 s
+Performance obtenu pour des matrices de taille    1200 par bloc : 1631.972789 Mflop/s pour un temps de 1.470000 s
+Performance obtenu pour des matrices de taille    1400 par bloc : 1196.153846 Mflop/s pour un temps de 2.340000 s
+Performance obtenu pour des matrices de taille    1600 par bloc : 916.618911 Mflop/s pour un temps de 3.490000 s
+Performance obtenu pour des matrices de taille    1800 par bloc : 725.604839 Mflop/s pour un temps de 4.960000 s
+Performance obtenu pour des matrices de taille    2000 par bloc : 2348.898678 Mflop/s pour un temps de 6.810000 s
+
+*****************************************************************************************
+*************** TEST FONCTIONS BLAS : MY_DAXPY(), MY_DGEMV(), MY_DGER() *****************
+*****************************************************************************************
+
+***** Test de my_daxpy() *****
+
+----- Vecteur 1 -----
+
+1.000000
+2.000000
+3.000000
+4.000000
+5.000000
+
+----- Vecteur 2 -----
+
+1.000000
+2.000000
+3.000000
+4.000000
+5.000000
+
+----- Resultat attendue -----
+
+[ 3  6  9 12 15]
+
+----- Resultat obtenue -----
+
+3.000000
+6.000000
+9.000000
+12.000000
+15.000000
+
+***** Test de my_dgemv() *****
+
+----- Vecteur 1 -----
+
+1.000000
+2.000000
+3.000000
+4.000000
+5.000000
+
+----- Vecteur 2 -----
+
+1.000000
+2.000000
+3.000000
+4.000000
+5.000000
+
+----- Matrice -----
+
+1.000000  2.000000  3.000000  4.000000  5.000000  
+6.000000  7.000000  8.000000  9.000000  10.000000  
+11.000000  12.000000  13.000000  14.000000  15.000000  
+16.000000  17.000000  18.000000  19.000000  20.000000  
+21.000000  22.000000  23.000000  24.000000  25.000000  
+
+----- Resultat attendue -----
+
+[ 56 132 208 284 360]
+
+----- Resultat obtenue -----
+
+56.000000
+132.000000
+208.000000
+284.000000
+360.000000
+
+***** Test de my_dger() *****
+
+----- Vecteur 1 -----
+
+1.000000
+2.000000
+3.000000
+4.000000
+5.000000
+
+----- Vecteur 2 -----
+
+1.000000
+2.000000
+3.000000
+4.000000
+5.000000
+
+----- Matrice -----
+
+1.000000  2.000000  3.000000  4.000000  5.000000  
+6.000000  7.000000  8.000000  9.000000  10.000000  
+11.000000  12.000000  13.000000  14.000000  15.000000  
+16.000000  17.000000  18.000000  19.000000  20.000000  
+21.000000  22.000000  23.000000  24.000000  25.000000  
+
+----- Resultat attendue -----
+
+[[ 3  6  9 12 15]
+ [10 15 20 25 30]
+ [17 24 31 38 45]
+ [24 33 42 51 60]
+ [31 42 53 64 75]]
+
+----- Resultat obtenue -----
+
+3.000000  6.000000  9.000000  12.000000  15.000000  
+10.000000  15.000000  20.000000  25.000000  30.000000  
+17.000000  24.000000  31.000000  38.000000  45.000000  
+24.000000  33.000000  42.000000  51.000000  60.000000  
+31.000000  42.000000  53.000000  64.000000  75.000000  
+
+*****************************************************
+*************** TEST FACTORISATION LU ***************
+*****************************************************
+
+----- Matrice -----
+
+20.000000  2.000000  3.000000  4.000000  5.000000  
+6.000000  140.000000  8.000000  9.000000  10.000000  
+11.000000  12.000000  260.000000  14.000000  15.000000  
+16.000000  17.000000  18.000000  380.000000  20.000000  
+21.000000  22.000000  23.000000  24.000000  500.000000  
+
+----- Vecteur -----
+
+1.000000
+2.000000
+3.000000
+4.000000
+5.000000
+
+----- Resultat attendue -----
+
+
+[[0.0444439 ]
+
+ [0.01093364]
+
+ [0.00835592]
+
+ [0.00740624]
+
+ [0.0069124 ]]
+
+----- Resultat obtenue -----
+
+0.044444
+0.010934
+0.008356
+0.007406
+0.006912
+
