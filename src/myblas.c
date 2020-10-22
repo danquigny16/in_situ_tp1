@@ -28,7 +28,7 @@ double my_ddot_unroll(const int N, const double *X, const int incX, const double
   // Unroll sur 2 instructions
   for (int i = 0; i < N; i+=2){
     res += X[i * incX] * Y[i * incY];
-    res += X[(i + 1) * incX] * Y[(i + 2) * incY];
+    res += X[(i + 1) * incX] * Y[(i + 1) * incY];
   }
 
   // On n'oublie le dernier élément si N est impaire
