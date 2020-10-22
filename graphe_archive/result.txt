@@ -74,96 +74,34 @@ Resultat du produit scalaire (attendue 55) : 55.000000
 
 ----- Test de temps d'execution -----
 
-Performance obtenu pour des vecteurs de taille      50 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille      50 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille      62 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille      62 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille      77 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille      77 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille      96 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille      96 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille     120 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille     120 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille     150 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille     150 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille     187 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille     187 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille     233 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille     233 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille     291 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille     291 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille     363 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille     363 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille     453 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille     453 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille     566 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille     566 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille     707 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille     707 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille     883 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille     883 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille    1103 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille    1103 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille    1378 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille    1378 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille    1722 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille    1722 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille    2152 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille    2152 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille    2690 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille    2690 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille    3362 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille    3362 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille    4202 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille    4202 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille    5252 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille    5252 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille    6565 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille    6565 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille    8206 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille    8206 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille   10257 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille   10257 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille   12821 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille   12821 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille   16026 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille   16026 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille   20032 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille   20032 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille   25040 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille   25040 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille   31300 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille   31300 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille   39125 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille   39125 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille   48906 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille   48906 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille   61132 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille   61132 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille   76415 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille   76415 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille   95518 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille   95518 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille  119397 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille  119397 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille  149246 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille  149246 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille  186557 :  37.311300 Mflop/s
-Performance obtenu pour des vecteurs de taille  186557 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille  233196 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille  233196 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille  291495 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille  291495 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille  364368 :  72.873500 Mflop/s
-Performance obtenu pour des vecteurs de taille  364368 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille  455460 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille  455460 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille  569325 : 113.864900 Mflop/s
-Performance obtenu pour des vecteurs de taille  569325 avec unroll :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille  711656 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille  711656 avec unroll : 142.331100 Mflop/s
-Performance obtenu pour des vecteurs de taille  889570 :        inf Mflop/s
-Performance obtenu pour des vecteurs de taille  889570 avec unroll : 177.913900 Mflop/s
+Performance obtenu pour des vecteurs de taille  500000 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille  500000 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille  625000 : 124.999900 Mflop/s
+Performance obtenu pour des vecteurs de taille  625000 avec unroll : 124.999900 Mflop/s
+Performance obtenu pour des vecteurs de taille  781250 :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille  781250 avec unroll : 156.249900 Mflop/s
+Performance obtenu pour des vecteurs de taille  976562 : 195.312300 Mflop/s
+Performance obtenu pour des vecteurs de taille  976562 avec unroll :        inf Mflop/s
+Performance obtenu pour des vecteurs de taille 1220702 : 244.140300 Mflop/s
+Performance obtenu pour des vecteurs de taille 1220702 avec unroll : 244.140300 Mflop/s
+Performance obtenu pour des vecteurs de taille 1525877 : 305.175300 Mflop/s
+Performance obtenu pour des vecteurs de taille 1525877 avec unroll : 305.175300 Mflop/s
+Performance obtenu pour des vecteurs de taille 1907346 : 381.469100 Mflop/s
+Performance obtenu pour des vecteurs de taille 1907346 avec unroll : 381.469100 Mflop/s
+Performance obtenu pour des vecteurs de taille 2384182 : 238.418150 Mflop/s
+Performance obtenu pour des vecteurs de taille 2384182 avec unroll : 476.836300 Mflop/s
+Performance obtenu pour des vecteurs de taille 2980227 : 596.045300 Mflop/s
+Performance obtenu pour des vecteurs de taille 2980227 avec unroll : 298.022650 Mflop/s
+Performance obtenu pour des vecteurs de taille 3725283 : 372.528250 Mflop/s
+Performance obtenu pour des vecteurs de taille 3725283 avec unroll : 372.528250 Mflop/s
+Performance obtenu pour des vecteurs de taille 4656603 : 465.660250 Mflop/s
+Performance obtenu pour des vecteurs de taille 4656603 avec unroll : 465.660250 Mflop/s
+Performance obtenu pour des vecteurs de taille 5820753 : 388.050167 Mflop/s
+Performance obtenu pour des vecteurs de taille 5820753 avec unroll : 388.050167 Mflop/s
+Performance obtenu pour des vecteurs de taille 7275941 : 485.062700 Mflop/s
+Performance obtenu pour des vecteurs de taille 7275941 avec unroll : 363.797025 Mflop/s
+Performance obtenu pour des vecteurs de taille 9094926 : 454.746275 Mflop/s
+Performance obtenu pour des vecteurs de taille 9094926 avec unroll : 363.797020 Mflop/s
 
 *********************************************************************
 *************** TEST PRODUIT DE MATRICES : MY_DGEMM() ***************
@@ -285,43 +223,43 @@ Performance obtenu pour des vecteurs de taille  889570 avec unroll : 177.913900 
 
 Test dgemm avec l'ordre kij :
 
-Performance obtenu pour des matrices de taille    1000 ordre kij : 989.603960 Mflop/s pour un temps de 2.020000 s
-Performance obtenu pour des matrices de taille    1200 ordre kij : 685.428571 Mflop/s pour un temps de 3.500000 s
-Performance obtenu pour des matrices de taille    1400 ordre kij : 499.821429 Mflop/s pour un temps de 5.600000 s
-Performance obtenu pour des matrices de taille    1600 ordre kij : 383.113772 Mflop/s pour un temps de 8.350000 s
-Performance obtenu pour des matrices de taille    1800 ordre kij : 300.166806 Mflop/s pour un temps de 11.990000 s
-Performance obtenu pour des matrices de taille    2000 ordre kij : 962.454874 Mflop/s pour un temps de 16.620000 s
+Performance obtenu pour des matrices de taille    1000 ordre kij : 1491.791045 Mflop/s pour un temps de 1.340000 s
+Performance obtenu pour des matrices de taille    1200 ordre kij : 673.876404 Mflop/s pour un temps de 3.560000 s
+Performance obtenu pour des matrices de taille    1400 ordre kij : 727.012987 Mflop/s pour un temps de 3.850000 s
+Performance obtenu pour des matrices de taille    1600 ordre kij : 382.198327 Mflop/s pour un temps de 8.370000 s
+Performance obtenu pour des matrices de taille    1800 ordre kij : 419.463869 Mflop/s pour un temps de 8.580000 s
+Performance obtenu pour des matrices de taille    2000 ordre kij : 966.525680 Mflop/s pour un temps de 16.550000 s
 
 Test dgemm avec l'ordre ijk :
 
-Performance obtenu pour des matrices de taille    1000 ordre ijk : 1638.524590 Mflop/s pour un temps de 1.220000 s
+Performance obtenu pour des matrices de taille    1000 ordre ijk : 1652.066116 Mflop/s pour un temps de 1.210000 s
 Performance obtenu pour des matrices de taille    1200 ordre ijk : 1142.380952 Mflop/s pour un temps de 2.100000 s
 Performance obtenu pour des matrices de taille    1400 ordre ijk : 838.023952 Mflop/s pour un temps de 3.340000 s
-Performance obtenu pour des matrices de taille    1600 ordre ijk : 641.082164 Mflop/s pour un temps de 4.990000 s
+Performance obtenu pour des matrices de taille    1600 ordre ijk : 642.369478 Mflop/s pour un temps de 4.980000 s
 Performance obtenu pour des matrices de taille    1800 ordre ijk : 506.901408 Mflop/s pour un temps de 7.100000 s
 Performance obtenu pour des matrices de taille    2000 ordre ijk : 1642.299795 Mflop/s pour un temps de 9.740000 s
 
 Test dgemm avec l'ordre jik :
 
-Performance obtenu pour des matrices de taille    1000 ordre jik : 1638.524590 Mflop/s pour un temps de 1.220000 s
+Performance obtenu pour des matrices de taille    1000 ordre jik : 1652.066116 Mflop/s pour un temps de 1.210000 s
 Performance obtenu pour des matrices de taille    1200 ordre jik : 1142.380952 Mflop/s pour un temps de 2.100000 s
-Performance obtenu pour des matrices de taille    1400 ordre jik : 835.522388 Mflop/s pour un temps de 3.350000 s
+Performance obtenu pour des matrices de taille    1400 ordre jik : 838.023952 Mflop/s pour un temps de 3.340000 s
 Performance obtenu pour des matrices de taille    1600 ordre jik : 641.082164 Mflop/s pour un temps de 4.990000 s
-Performance obtenu pour des matrices de taille    1800 ordre jik : 506.901408 Mflop/s pour un temps de 7.100000 s
-Performance obtenu pour des matrices de taille    2000 ordre jik : 1640.615385 Mflop/s pour un temps de 9.750000 s
+Performance obtenu pour des matrices de taille    1800 ordre jik : 506.188467 Mflop/s pour un temps de 7.110000 s
+Performance obtenu pour des matrices de taille    2000 ordre jik : 1642.299795 Mflop/s pour un temps de 9.740000 s
 
 Test dgemm avec l'ordre kji :
 
-Performance obtenu pour des matrices de taille    1000 ordre kji : 1999.000000 Mflop/s pour un temps de 1.000000 s
-Performance obtenu pour des matrices de taille    1200 ordre kji : 1445.180723 Mflop/s pour un temps de 1.660000 s
-Performance obtenu pour des matrices de taille    1400 ordre kji : 1093.359375 Mflop/s pour un temps de 2.560000 s
-Performance obtenu pour des matrices de taille    1600 ordre kji : 850.797872 Mflop/s pour un temps de 3.760000 s
-Performance obtenu pour des matrices de taille    1800 ordre kji : 694.787645 Mflop/s pour un temps de 5.180000 s
-Performance obtenu pour des matrices de taille    2000 ordre kji : 2272.159091 Mflop/s pour un temps de 7.040000 s
+Performance obtenu pour des matrices de taille    1000 ordre kji : 3123.437500 Mflop/s pour un temps de 0.640000 s
+Performance obtenu pour des matrices de taille    1200 ordre kji : 2180.909091 Mflop/s pour un temps de 1.100000 s
+Performance obtenu pour des matrices de taille    1400 ordre kji : 1617.919075 Mflop/s pour un temps de 1.730000 s
+Performance obtenu pour des matrices de taille    1600 ordre kji : 1239.922481 Mflop/s pour un temps de 2.580000 s
+Performance obtenu pour des matrices de taille    1800 ordre kji : 980.653951 Mflop/s pour un temps de 3.670000 s
+Performance obtenu pour des matrices de taille    2000 ordre kji : 3173.809524 Mflop/s pour un temps de 5.040000 s
 
 Test dgemm avec l'ordre kji et boucle for déroulée:
 
-Performance obtenu pour des matrices de taille    1000 ordre jik unroll: 1652.066116 Mflop/s pour un temps de 1.210000 s
+Performance obtenu pour des matrices de taille    1000 ordre jik unroll: 1638.524590 Mflop/s pour un temps de 1.220000 s
 Performance obtenu pour des matrices de taille    1200 ordre jik unroll: 1147.846890 Mflop/s pour un temps de 2.090000 s
 Performance obtenu pour des matrices de taille    1400 ordre jik unroll: 840.540541 Mflop/s pour un temps de 3.330000 s
 Performance obtenu pour des matrices de taille    1600 ordre jik unroll: 643.661972 Mflop/s pour un temps de 4.970000 s
@@ -330,10 +268,10 @@ Performance obtenu pour des matrices de taille    2000 ordre jik unroll: 1647.37
 
 Test dgemm par bloc :
 
-Performance obtenu pour des matrices de taille    1000 par bloc : 2324.418605 Mflop/s pour un temps de 0.860000 s
+Performance obtenu pour des matrices de taille    1000 par bloc : 2351.764706 Mflop/s pour un temps de 0.850000 s
 Performance obtenu pour des matrices de taille    1200 par bloc : 1631.972789 Mflop/s pour un temps de 1.470000 s
-Performance obtenu pour des matrices de taille    1400 par bloc : 1196.153846 Mflop/s pour un temps de 2.340000 s
-Performance obtenu pour des matrices de taille    1600 par bloc : 916.618911 Mflop/s pour un temps de 3.490000 s
+Performance obtenu pour des matrices de taille    1400 par bloc : 1201.287554 Mflop/s pour un temps de 2.330000 s
+Performance obtenu pour des matrices de taille    1600 par bloc : 919.252874 Mflop/s pour un temps de 3.480000 s
 Performance obtenu pour des matrices de taille    1800 par bloc : 725.604839 Mflop/s pour un temps de 4.960000 s
 Performance obtenu pour des matrices de taille    2000 par bloc : 2348.898678 Mflop/s pour un temps de 6.810000 s
 
