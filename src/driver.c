@@ -600,6 +600,36 @@ void test_factorisation_LU(){
   free_vecteur(vec);
   free_matrice(mat);
 
+  //////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
+  // printf("\n\n++++++++++++++++++++ test +++++++++++++++++++++++++\n\n");
+  //
+  // // Initialisation des vecteurs
+  // vec = vecteur(10);
+  // mat = matrice(10, 10);
+  //
+  // // Initialisation des deux vecteurs
+  // init_vecteur(10, 1, vec);
+  // // Notre init_matrice donne des divisions par zéro, on l'évite
+  // init_2_matrice(10, 10, 10, mat);
+  //
+  // // Affichage des résultats
+  // printf("\n----- Matrice -----\n\n");
+  // affiche(10, 10, mat, 10, stdout);
+  //
+  // printf("\n----- Vecteur -----\n\n");
+  // affiche_vecteur(10, vec, 1, stdout);
+  //
+  // my_dgesv(CblasColMajor, 10, 1, mat, 10, NULL, vec, 1);
+  // printf("\n----- Resultat obtenue -----\n\n");
+  // affiche_vecteur(10, vec, 1, stdout);
+  //
+  // // Libération mémoire des précédents vecteurs
+  // free_vecteur(vec);
+  // free_matrice(mat);
+  //////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
+
   // Fin du test
   printf("\n");
 }

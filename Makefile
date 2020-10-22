@@ -23,7 +23,7 @@ GRAPHE=graphe
 
 all: $(BUILD)/driver
 
-$(BUILD)/driver.o: $(SRC_DIR)/driver.c $(SRC_DIR)/util.h
+$(BUILD)/driver.o: $(SRC_DIR)/driver.c $(SRC_DIR)/util.h $(SRC_DIR)/myblas.h $(SRC_DIR)/mylapack.h
 	$(CC) -o $@ $(CFLAGS) -c $<
 
 $(BUILD)/util.o: $(SRC_DIR)/util.c $(SRC_DIR)/util.h
@@ -32,7 +32,7 @@ $(BUILD)/util.o: $(SRC_DIR)/util.c $(SRC_DIR)/util.h
 $(BUILD)/myblas.o: $(SRC_DIR)/myblas.c $(SRC_DIR)/util.h $(SRC_DIR)/myblas.h
 	$(CC) -o $@ $(CFLAGS) -c $<
 
-$(BUILD)/mylapack.o: $(SRC_DIR)/mylapack.c $(SRC_DIR)/util.h $(SRC_DIR)/mylapack.h
+$(BUILD)/mylapack.o: $(SRC_DIR)/mylapack.c $(SRC_DIR)/util.h $(SRC_DIR)/myblas.h $(SRC_DIR)/mylapack.h
 	$(CC) -o $@ $(CFLAGS) -c $<
 
 $(LIB)/libmyblas.a: $(BUILD)/util.o $(BUILD)/myblas.o
