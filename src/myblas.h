@@ -6,6 +6,8 @@
 
 double my_ddot(const int N, const double *X, const int incX, const double *Y, const int incY);
 double my_ddot_unroll(const int N, const double *X, const int incX, const double *Y, const int incY);
+double my_ddot_avx2(const int N, const double *X, const int incX, const double *Y, const int incY);
+double my_ddot_avx2_fma(const int N, const double *X, const int incX, const double *Y, const int incY);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Produit de matrices

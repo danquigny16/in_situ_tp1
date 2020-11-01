@@ -37,6 +37,9 @@ void test_alloc_et_free(){
   printf("\n");
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+
 /**
 Fait les tests relatifs aux initialisations de matrices et de vecteurs
 */
@@ -78,6 +81,9 @@ void test_initialisation(){
   printf("\n");
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+
 /**
 Fait les tests relatifs au produit scalaire my_ddot()
 */
@@ -89,7 +95,7 @@ void test_my_ddot(){
 
   //////////////////////////////////////////////////////////////////////////////
   // Test du produit scalaire : le résultat est-il correct
-  printf("----- Test de resultat -----\n\n");
+  printf("----- Test de resultat (vecteur) -----\n\n");
 
   // Initialisation des vecteurs
   double * vec1 = vecteur(5);
@@ -103,15 +109,43 @@ void test_my_ddot(){
   affiche_vecteur(5, vec1, 1, stdout);
   printf("\nVecteur 2\n\n");
   affiche_vecteur(5, vec2, 1, stdout);
-  printf("\nResultat du produit scalaire (attendue 55) : %f\n\n", my_ddot(5, vec1, 1, vec2, 1));
+  printf("\nResultat du produit scalaire (attendue 55) : %f\n", my_ddot(5, vec1, 1, vec2, 1));
+  printf("\nResultat du produit scalaire unroll (attendue 55) : %f\n", my_ddot_unroll(5, vec1, 1, vec2, 1));
+  printf("\nResultat du produit scalaire avx2 (attendue 55) : %f\n", my_ddot_avx2(5, vec1, 1, vec2, 1));
+  printf("\nResultat du produit scalaire avx2-fma (attendue 55) : %f\n\n", my_ddot_avx2_fma(5, vec1, 1, vec2, 1));
 
   // Libération mémoire des précédents vecteurs
   free_vecteur(vec1);
   free_vecteur(vec2);
 
   //////////////////////////////////////////////////////////////////////////////
+
+  printf("\n----- Test de resultat (matrice) -----\n\n");
+
+  // Initialisation des matrice
+  double * mat1 = matrice(8, 5);
+  double * mat2 = matrice(8, 5);
+
+  // Initialisation des deux vecteurs
+  init_matrice(8, 5, 8, mat1);
+  init_matrice(8, 5, 8, mat2);
+
+  printf("Matrice 1\n\n");
+  affiche(8, 5, mat1, 8, stdout);
+  printf("\nMatrice 2\n\n");
+  affiche(8, 5, mat2, 8, stdout);
+  printf("\nResultat du produit scalaire (attendue 55) : %f\n", my_ddot(5, mat1, 8, mat2, 8));
+  printf("\nResultat du produit scalaire unroll (attendue 55) : %f\n", my_ddot_unroll(5, mat1, 8, mat2, 8));
+  printf("\nResultat du produit scalaire avx2 (attendue 55) : %f\n", my_ddot_avx2(5, mat1, 8, mat2, 8));
+  printf("\nResultat du produit scalaire avx2-fma (attendue 55) : %f\n\n", my_ddot_avx2_fma(5, mat1, 8, mat2, 8));
+
+  // Libération mémoire des précédents vecteurs
+  free_matrice(mat1);
+  free_matrice(mat2);
+
+  //////////////////////////////////////////////////////////////////////////////
   // Test du produit scalaire : temps d'éxecution
-  printf("----- Test de temps d'execution -----\n\n");
+  printf("----- Test de temps d'execution (vecteur) -----\n\n");
 
   // Initialisation des variables
   int m = 50;
@@ -123,28 +157,62 @@ void test_my_ddot(){
     vec1 = vecteur(m);
     vec2 = vecteur(m);
 
+    ////////////////////////////////////////////////////////////////////////////
+
     // Produit scalaire
     debut = clock();
     my_ddot(m, vec1, 1, vec2, 1);
     fin = clock();
 
     // Affichage des performances
-    double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    double temps0 = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
     double flop = (double) (2 * m - 1); // m multiplication et m-1 addition
-    double Mflop_s = (flop / temps) / 1000000.0;
-    printf("Performance obtenu pour des vecteurs de taille %7d : %10.6f Mflop/s\n", m, Mflop_s);
+    double Mflop_s = (flop / temps0) / 1000000.0;
+    printf("Performance obtenu pour des vecteurs de taille %7d :               %12.6f Mflop/s pour un temps de %f\n", m, Mflop_s, temps0);
 
+    ////////////////////////////////////////////////////////////////////////////
+
+    // Produit scalaire unroll
     debut = clock();
     my_ddot_unroll(m, vec1, 1, vec2, 1);
+    fin = clock();
+
+    // Affichage des performances
+    double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    flop = (double) (2 * m - 1); // m multiplication et m-1 addition
+    Mflop_s = (flop / temps) / 1000000.0;
+    printf("Performance obtenu pour des vecteurs de taille %7d avec unroll :   %12.6f Mflop/s pour un temps de %f", m, Mflop_s, temps);
+    printf(", soit une amelioration de %f\n", temps0 / temps);
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    // Produit scalaire avx2
+    debut = clock();
+    my_ddot_avx2(m, vec1, 1, vec2, 1);
     fin = clock();
 
     // Affichage des performances
     temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
     flop = (double) (2 * m - 1); // m multiplication et m-1 addition
     Mflop_s = (flop / temps) / 1000000.0;
-    printf("Performance obtenu pour des vecteurs de taille %7d avec unroll : %10.6f Mflop/s\n", m, Mflop_s);
+    printf("Performance obtenu pour des vecteurs de taille %7d avec avx2 :     %12.6f Mflop/s pour un temps de %f", m, Mflop_s, temps);
+    printf(", soit une amelioration de %f\n", temps0 / temps);
 
+    ////////////////////////////////////////////////////////////////////////////
 
+    // Produit scalaire avx2
+    debut = clock();
+    my_ddot_avx2_fma(m, vec1, 1, vec2, 1);
+    fin = clock();
+
+    // Affichage des performances
+    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    flop = (double) (2 * m - 1); // m multiplication et m-1 addition
+    Mflop_s = (flop / temps) / 1000000.0;
+    printf("Performance obtenu pour des vecteurs de taille %7d avec avx2-fma : %12.6f Mflop/s pour un temps de %f", m, Mflop_s, temps);
+    printf(", soit une amelioration de %f\n\n", temps0 / temps);
+
+    ////////////////////////////////////////////////////////////////////////////
 
     // Libération mémoire des précédents vecteurs
     free_vecteur(vec1);
@@ -155,9 +223,92 @@ void test_my_ddot(){
     m += increment;
   }
 
+  //////////////////////////////////////////////////////////////////////////////
+  // Test du produit scalaire : temps d'éxecution
+  printf("----- Test de temps d'execution (matrice) -----\n\n");
+
+  // Initialisation des variables
+  m = 50;
+
+  // Tests pour des tailles de vecteurs croissant
+  while (m < 1000000){
+    // Allocation de deux vecteurs de taille m
+    mat1 = matrice(10, m);
+    mat2 = matrice(10, m);
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    // Produit scalaire
+    debut = clock();
+    my_ddot(m, mat1, 10, mat2, 10);
+    fin = clock();
+
+    // Affichage des performances
+    double temps0 = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    double flop = (double) (2 * m - 1); // m multiplication et m-1 addition
+    double Mflop_s = (flop / temps0) / 1000000.0;
+    printf("Performance obtenu pour des vecteurs (1ere ligne matrice) de taille %7d :               %12.6f Mflop/s pour un temps de %f\n", m, Mflop_s, temps0);
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    // Produit scalaire unroll
+    debut = clock();
+    my_ddot_unroll(m, mat1, 10, mat2, 10);
+    fin = clock();
+
+    // Affichage des performances
+    double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    flop = (double) (2 * m - 1); // m multiplication et m-1 addition
+    Mflop_s = (flop / temps) / 1000000.0;
+    printf("Performance obtenu pour des vecteurs (1ere ligne matrice) de taille %7d avec unroll :   %12.6f Mflop/s pour un temps de %f", m, Mflop_s, temps);
+    printf(", soit une amelioration de %f\n", temps0 / temps);
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    // Produit scalaire avx2
+    debut = clock();
+    my_ddot_avx2(m, mat1, 10, mat2, 10);
+    fin = clock();
+
+    // Affichage des performances
+    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    flop = (double) (2 * m - 1); // m multiplication et m-1 addition
+    Mflop_s = (flop / temps) / 1000000.0;
+    printf("Performance obtenu pour des vecteurs (1ere ligne matrice) de taille %7d avec avx2 :     %12.6f Mflop/s pour un temps de %f", m, Mflop_s, temps);
+    printf(", soit une amelioration de %f\n", temps0 / temps);
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    // Produit scalaire avx2
+    debut = clock();
+    my_ddot_avx2_fma(m, mat1, 10, mat2, 10);
+    fin = clock();
+
+    // Affichage des performances
+    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    flop = (double) (2 * m - 1); // m multiplication et m-1 addition
+    Mflop_s = (flop / temps) / 1000000.0;
+    printf("Performance obtenu pour des vecteurs (1ere ligne matrice) de taille %7d avec avx2-fma : %12.6f Mflop/s pour un temps de %f", m, Mflop_s, temps);
+    printf(", soit une amelioration de %f\n\n", temps0 / temps);
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    // Libération mémoire des précédents vecteurs
+    free_matrice(mat1);
+    free_matrice(mat2);
+
+    // Increment de m de 25%
+    int increment = m / 4;
+    m += increment;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
   // Fin du test
   printf("\n");
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 Fait les tests relatifs au produit de matrices my_dgemm_scalaire()
@@ -288,7 +439,7 @@ void test_my_dgemm(){
     double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
     // (size_mat ligne) * (size_mat colonne) * (size_mat multiplication et size_mat - 1 addition)
     int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
-    double Mflop_s = (Mflop / temps) ;
+    double Mflop_s = (Mflop / temps);
     printf("Performance obtenu pour des matrices de taille %7d ordre kij : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
 
     // Libération mémoire des matrices
@@ -315,7 +466,7 @@ void test_my_dgemm(){
     double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
     // (size_mat ligne) * (size_mat colonne) * (size_mat multiplication et size_mat - 1 addition)
     int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
-    double Mflop_s = (Mflop / temps) ;
+    double Mflop_s = (Mflop / temps);
 
     printf("Performance obtenu pour des matrices de taille %7d ordre ijk : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
 
@@ -343,7 +494,7 @@ void test_my_dgemm(){
     double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
     // (size_mat ligne) * (size_mat colonne) * (size_mat multiplication et size_mat - 1 addition)
     int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
-    double Mflop_s = (Mflop / temps) ;
+    double Mflop_s = (Mflop / temps);
 
     printf("Performance obtenu pour des matrices de taille %7d ordre jik : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
 
@@ -371,7 +522,7 @@ void test_my_dgemm(){
     double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
     // (size_mat ligne) * (size_mat colonne) * (size_mat multiplication et size_mat - 1 addition)
     int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
-    double Mflop_s = (Mflop / temps) ;
+    double Mflop_s = (Mflop / temps);
     printf("Performance obtenu pour des matrices de taille %7d ordre kji : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
 
     // Libération mémoire des matrices
@@ -398,7 +549,7 @@ void test_my_dgemm(){
     double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
     // (size_mat ligne) * (size_mat colonne) * (size_mat multiplication et size_mat - 1 addition)
     int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
-    double Mflop_s = (Mflop / temps) ;
+    double Mflop_s = (Mflop / temps);
 
     printf("Performance obtenu pour des matrices de taille %7d ordre jik unroll: %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
 
@@ -426,7 +577,7 @@ void test_my_dgemm(){
     double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
     // (size_mat ligne) * (size_mat colonne) * (size_mat multiplication et size_mat - 1 addition)
     int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
-    double Mflop_s = (Mflop / temps) ;
+    double Mflop_s = (Mflop / temps);
 
     printf("Performance obtenu pour des matrices de taille %7d par bloc : %10.6f Mflop/s pour un temps de %f s\n", size_mat, Mflop_s, temps);
 
@@ -439,6 +590,8 @@ void test_my_dgemm(){
   // Fin du test
   printf("\n");
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 Fait les tests relatifs aux fonctions blas complémentaires
@@ -560,6 +713,9 @@ void test_blas(){
   printf("\n");
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+
 /**
 Fait les tests relatifs à la factorisation LU
 */
@@ -639,12 +795,12 @@ void test_factorisation_LU(){
 // Main
 
 int main(/*int argc, char ** argv*/){
-  test_alloc_et_free();
-  test_initialisation();
+  // test_alloc_et_free();
+  // test_initialisation();
   test_my_ddot();
-  test_my_dgemm();
-  test_blas();
-  test_factorisation_LU();
+  // test_my_dgemm();
+  // test_blas();
+  // test_factorisation_LU();
 
   return 0;
 }

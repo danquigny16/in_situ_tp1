@@ -8,7 +8,8 @@ CC=gcc
 AR=ar
 
 #option
-CFLAGS=-Wall -Wextra -std=c99 -O3
+#CFLAGS=-Wall -Wextra -std=c99 -O3
+CFLAGS=-Wall -Wextra -mavx2 -mfma -O3
 ARFLAGS=-rc
 
 #dossiers

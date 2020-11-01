@@ -48,7 +48,8 @@ Alloue la mémoire pour une matrice de dim M*N, et renvoie un pointeur vers cett
 @return : Un pointeur sur la matrice
 */
 double * matrice(int M, int N){
-  double * A = malloc(M * N * sizeof(double));
+  //double * A = malloc(M * N * sizeof(double));
+  double * A = aligned_alloc(32, M * N * sizeof(double));
   return A;
 }
 
@@ -58,7 +59,8 @@ Alloue la mémoire pour un vecteur de dim N, et renvoie un pointeur vers ce vect
 @return : Un pointeur sur le vecteur
 */
 double * vecteur(int N){
-  double * X = malloc(N * sizeof(double));
+  //double * X = malloc(N * sizeof(double));
+  double * X = aligned_alloc(32, N * sizeof(double));
   return X;
 }
 

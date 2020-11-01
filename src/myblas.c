@@ -36,7 +36,7 @@ double my_ddot_unroll(const int N, const double *X, const int incX, const double
   int res = 0;
 
   // Unroll sur 2 instructions
-  for (int i = 0; i < N; i+=2){
+  for (int i = 0; i < N - 1; i += 2){
     res += X[i * incX] * Y[i * incY];
     res += X[(i + 1) * incX] * Y[(i + 1) * incY];
   }
@@ -45,6 +45,180 @@ double my_ddot_unroll(const int N, const double *X, const int incX, const double
   if (N % 2 != 0){
     res += X[(N - 1) * incX] * Y[(N - 1) * incY];
   }
+
+  return res;
+}
+
+/**
+Effectue le produit scalaire entre les vecteurs X et Y
+Ici on se sert des opérations SIMD avx2
+@param N Nombre d'éléments des vecteurs X et Y
+@param X Vecteur X
+@param incX leading dimension de  X
+@param Y Vecteur Y
+@param incY leading dimension de  Y
+@return : Le résultat du produit scalaire
+*/
+double my_ddot_avx2(const int N, const double *X, const int incX, const double *Y, const int incY){
+  int res = 0;
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  if (incX == 1 && incY == 1){
+    // res_tab est un tableau pour contenir notre petit vecteur de double (maximum 4 double avec avx2-fma), qui contiendra les resultats
+    __m256d res_tab = _mm256_set1_pd(0.0);
+    // res_tab_tmp servira à stocker les résultat des multiplication, on additionnera ensuite son contenu avec res_tab pour avoir le résultat
+    __m256d res_tab_tmp = _mm256_set1_pd(0.0);
+
+    // On fait nos opération par paquet de 4 double, si N n'est pas un multiple de 4, on fait le reste à la fin
+    int size_vector = N / 4;
+    int remain = N % 4;
+
+    // On interprete notre tableau de double en tableau de __mm256d
+    __m256d *X_vector = (__m256d *) X;
+    __m256d *Y_vector = (__m256d *) Y;
+
+    // On fait nos calculs de  "X[i * incX] * Y[i * incY]" par paquet de 4
+    for (int i = 0; i < size_vector; i++, X_vector++, Y_vector++){
+      res_tab_tmp = _mm256_mul_pd(*X_vector, *Y_vector);
+      res_tab = _mm256_add_pd(res_tab, res_tab_tmp);
+    }
+
+    // On compacte notre petit vecteur de double pour récupérer le résultat final
+    res += ((double *) &res_tab)[0];
+    res += ((double *) &res_tab)[1];
+    res += ((double *) &res_tab)[2];
+    res += ((double *) &res_tab)[3];
+
+    // On n'oublie pas de faire le reste si N n'était pas un multiple de 4
+    for (int i = N - remain; i < N; i++){
+      res += X[i * incX] * Y[i * incY];
+    }
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  else{
+    // res_tab est un tableau pour contenir notre petit vecteur de double (maximum 4 double avec avx2-fma), qui contiendra les resultats
+    __m256d res_tab = _mm256_set1_pd(0.0);
+    // res_tab_tmp servira à stocker les résultat des multiplication, on additionnera ensuite son contenu avec res_tab pour avoir le résultat
+    __m256d res_tab_tmp = _mm256_set1_pd(0.0);
+
+    // On fait nos opération par paquet de 4 double, si N n'est pas un multiple de 4, on fait le reste à la fin
+    int size_vector = N / 4;
+    int remain = N % 4;
+
+    // On prendra nos variables par paquet de 4
+    __m256d X_vector;
+    __m256d Y_vector;
+
+    // On fait nos multiplication "X[i * incX] * Y[i * incY]" par paquet de 4, mais nos additions ne peuvent pas être
+    // faite avec SIMD, on fait donc un unroll de 4
+    for (int i = 0; i < size_vector; i++){
+      X_vector = _mm256_set_pd(X[i], X[i + incX], X[i + 2 * incX], X[i + 3 * incX]);
+      Y_vector = _mm256_set_pd(Y[i], Y[i + incX], Y[i + 2 * incX], Y[i + 3 * incX]);
+
+      res_tab_tmp = _mm256_mul_pd(X_vector, Y_vector);
+      res_tab = _mm256_add_pd(res_tab, res_tab_tmp);
+    }
+
+    // On compacte notre petit vecteur de double pour récupérer le résultat final
+    res += ((double *) &res_tab)[0];
+    res += ((double *) &res_tab)[1];
+    res += ((double *) &res_tab)[2];
+    res += ((double *) &res_tab)[3];
+
+    // On n'oublie pas de faire le reste si N n'était pas un multiple de 4
+    for (int i = N - remain; i < N; i++){
+      res += X[i * incX] * Y[i * incY];
+    }
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  return res;
+}
+
+/**
+Effectue le produit scalaire entre les vecteurs X et Y
+Ici on se sert des opérations SIMD avx2 et fma
+@param N Nombre d'éléments des vecteurs X et Y
+@param X Vecteur X
+@param incX leading dimension de  X
+@param Y Vecteur Y
+@param incY leading dimension de  Y
+@return : Le résultat du produit scalaire
+*/
+double my_ddot_avx2_fma(const int N, const double *X, const int incX, const double *Y, const int incY){
+  int res = 0;
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  if (incX == 1 && incY == 1){
+    // res_tab est un tableau pour contenir notre petit vecteur de double (maximum 4 double avec avx2-fma), qui contiendra les resultats
+    __m256d res_tab = _mm256_set1_pd(0.0);
+
+    // On fait nos opération par paquet de 4 double, si N n'est pas un multiple de 4, on fait le reste à la fin
+    int size_vector = N / 4;
+    int remain = N % 4;
+
+    // On interprete notre tableau de double en tableau de __mm256d
+    __m256d *X_vector = (__m256d *) X;
+    __m256d *Y_vector = (__m256d *) Y;
+
+    // On fait nos calculs de  "X[i * incX] * Y[i * incY]" par paquet de 4
+    for (int i = 0; i < size_vector; i++, X_vector++, Y_vector++){
+      res_tab = _mm256_fmadd_pd(*X_vector, *Y_vector, res_tab);
+    }
+
+    // On compacte notre petit vecteur de double pour récupérer le résultat final
+    res += ((double *) &res_tab)[0];
+    res += ((double *) &res_tab)[1];
+    res += ((double *) &res_tab)[2];
+    res += ((double *) &res_tab)[3];
+
+    // On n'oublie pas de faire le reste si N n'était pas un multiple de 4
+    for (int i = N - remain; i < N; i++){
+      res += X[i * incX] * Y[i * incY];
+    }
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  else{
+    // res_tab est un tableau pour contenir notre petit vecteur de double (maximum 4 double avec avx2-fma), qui contiendra les resultats
+    __m256d res_tab = _mm256_set1_pd(0.0);
+
+    // On fait nos opération par paquet de 4 double, si N n'est pas un multiple de 4, on fait le reste à la fin
+    int size_vector = N / 4;
+    int remain = N % 4;
+
+    // On prendra nos variables par paquet de 4
+    __m256d X_vector;
+    __m256d Y_vector;
+
+    // On fait nos multiplication "X[i * incX] * Y[i * incY]" par paquet de 4, mais nos additions ne peuvent pas être
+    // faite avec SIMD, on fait donc un unroll de 4
+    for (int i = 0; i < size_vector; i++){
+      X_vector = _mm256_set_pd(X[i], X[i + incX], X[i + 2 * incX], X[i + 3 * incX]);
+      Y_vector = _mm256_set_pd(Y[i], Y[i + incX], Y[i + 2 * incX], Y[i + 3 * incX]);
+
+      res_tab = _mm256_fmadd_pd(X_vector, Y_vector, res_tab);
+    }
+
+    // On compacte notre petit vecteur de double pour récupérer le résultat final
+    res += ((double *) &res_tab)[0];
+    res += ((double *) &res_tab)[1];
+    res += ((double *) &res_tab)[2];
+    res += ((double *) &res_tab)[3];
+
+    // On n'oublie pas de faire le reste si N n'était pas un multiple de 4
+    for (int i = N - remain; i < N; i++){
+      res += X[i * incX] * Y[i * incY];
+    }
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
 
   return res;
 }
