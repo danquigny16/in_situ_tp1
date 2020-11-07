@@ -5,7 +5,7 @@
 // Factorisation LU et résolution de système triangulaire
 
 /**
-On effectue la factorisation LU de la matrice A
+On effectue la factorisation LU de la matrice A de manière séquentiel
 Ne gère pas les cas où il y a des division par 0
 @param Order : Indique si la matrice A est stocké en CblasRowMajor ou en CblasColMajor
 @param M : Nombre de ligne de A
@@ -39,7 +39,7 @@ void my_dgetf2(const enum CBLAS_ORDER Order, int M, int N, double *A, int lda, i
 }
 
 /**
-On effectue la factorisation LU de la matrice A
+On effectue la factorisation LU de la matrice A par block
 Ne gère pas les cas où il y a des division par 0
 @param Order : Indique si la matrice A est stocké en CblasRowMajor ou en CblasColMajor
 @param M : Nombre de ligne de A
@@ -153,7 +153,7 @@ void my_dtrsm(const enum CBLAS_ORDER Order, const enum CBLAS_SIDE Side,
   //////////////////////////////////////////////////////////////////////////////
   // UX = Y
   // U matrice triangulaire supérieure
-  else if (Uplo == CblasUpper && Diag == CblasNonUnit){
+  else if (Side == CblasLeft && Uplo == CblasUpper && Diag == CblasNonUnit){
     // Résolution de U*X1 = Y1, U*X2 = Y2, ...
     for (int k = 0; k < N; k++){
       // colonne
@@ -195,7 +195,7 @@ void my_dtrsm(const enum CBLAS_ORDER Order, const enum CBLAS_SIDE Side,
   //////////////////////////////////////////////////////////////////////////////
   // XL = Y       (ici X et Y vecteur en ligne)
   // L matrice unitriangulaire inférieure
-  if (Side == CblasRight && Uplo == CblasLower && Diag == CblasUnit){
+  else if (Side == CblasRight && Uplo == CblasLower && Diag == CblasUnit){
     // Résolution de X1*L = Y1, X2*L = Y2, ...
     for (int k = 0; k < M; k++){
       // ligne
@@ -230,8 +230,10 @@ void my_dgesv(const enum CBLAS_ORDER Order, const int N, int nrhs, double *A, in
 
   //////////////////////////////////////////////////////////////////////////////
   // Résolution de AX = B
-  my_dgetf2(Order, N, N, A, lda, NULL);
-  //my_dgetrf(Order, N, N, A, lda, NULL);
+  //my_dgetf2(Order, N, N, A, lda, NULL);
+  my_dgetrf(Order, N, N, A, lda, NULL);
+  printf("\n----------- matrice factoriser -----------------\n\n");
+  affiche(N, N, A, lda, stdout);
   my_dtrsm(Order, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, N, 1, 1, A, lda, B, ldb);
   my_dtrsm(Order, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, N, 1, 1, A, lda, B, ldb);
 }

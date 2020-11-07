@@ -821,11 +821,11 @@ void test_factorisation_LU(){
   affiche_vecteur(5, vec, 1, stdout);
 
   printf("\n----- Resultat attendue -----\n\n");
-  printf("\n[[0.0444439 ]\n");
-  printf("\n [0.01093364]\n");
-  printf("\n [0.00835592]\n");
-  printf("\n [0.00740624]\n");
-  printf("\n [0.0069124 ]]\n");
+  printf("[[0.0444439 ]\n");
+  printf(" [0.01093364]\n");
+  printf(" [0.00835592]\n");
+  printf(" [0.00740624]\n");
+  printf(" [0.0069124 ]]\n");
 
   my_dgesv(CblasColMajor, 5, 1, mat, 5, NULL, vec, 1);
   printf("\n----- Resultat obtenue -----\n\n");
@@ -837,31 +837,43 @@ void test_factorisation_LU(){
 
   //////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////
-  // printf("\n\n++++++++++++++++++++ test +++++++++++++++++++++++++\n\n");
-  //
-  // // Initialisation des vecteurs
-  // vec = vecteur(10);
-  // mat = matrice(10, 10);
-  //
-  // // Initialisation des deux vecteurs
-  // init_vecteur(10, 1, vec);
-  // // Notre init_matrice donne des divisions par zéro, on l'évite
-  // init_2_matrice(10, 10, 10, mat);
-  //
-  // // Affichage des résultats
-  // printf("\n----- Matrice -----\n\n");
-  // affiche(10, 10, mat, 10, stdout);
-  //
-  // printf("\n----- Vecteur -----\n\n");
-  // affiche_vecteur(10, vec, 1, stdout);
-  //
-  // my_dgesv(CblasColMajor, 10, 1, mat, 10, NULL, vec, 1);
-  // printf("\n----- Resultat obtenue -----\n\n");
-  // affiche_vecteur(10, vec, 1, stdout);
-  //
-  // // Libération mémoire des précédents vecteurs
-  // free_vecteur(vec);
-  // free_matrice(mat);
+  printf("\n\n++++++++++++++++++++ test +++++++++++++++++++++++++\n\n");
+
+  // Initialisation des vecteurs
+  vec = vecteur(10);
+  mat = matrice(10, 10);
+
+  // Initialisation des deux vecteurs
+  init_vecteur(10, 1, vec);
+  // Notre init_matrice donne des divisions par zéro, on l'évite
+  init_2_matrice(10, 10, 10, mat);
+
+  // Affichage des résultats
+  printf("\n----- Matrice -----\n\n");
+  affiche(10, 10, mat, 10, stdout);
+
+  printf("\n----- Vecteur -----\n\n");
+  affiche_vecteur(10, vec, 1, stdout);
+
+  printf("\n----- Resultat attendue -----\n\n");
+  printf("0.043652\n");
+  printf("0.005048\n");
+  printf("0.003370\n");
+  printf("0.002778\n");
+  printf("0.002475\n");
+  printf("0.002291\n");
+  printf("0.002168\n");
+  printf("0.002079\n");
+  printf("0.002012\n");
+  printf("0.001960\n");
+
+  my_dgesv(CblasColMajor, 10, 1, mat, 10, NULL, vec, 1);
+  printf("\n----- Resultat obtenue -----\n\n");
+  affiche_vecteur(10, vec, 1, stdout);
+
+  // Libération mémoire des précédents vecteurs
+  free_vecteur(vec);
+  free_matrice(mat);
   //////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////
 
@@ -876,10 +888,10 @@ void test_factorisation_LU(){
 int main(/*int argc, char ** argv*/){
   // test_alloc_et_free();
   // test_initialisation();
-  test_my_ddot();
+  // test_my_ddot();
   // test_my_dgemm();
   // test_blas();
-  // test_factorisation_LU();
+  test_factorisation_LU();
 
   return 0;
 }

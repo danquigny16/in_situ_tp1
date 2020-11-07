@@ -654,7 +654,7 @@ void my_dgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, c
 
   // on définit une taille de bloc pour le produit de matrice par bloc, en supposant M multiple de bloc_size
   // sinon pb avec my_dgemm_scalaire, qui doit prendre des matrices carrés
-  int bloc_size = 10;
+  int bloc_size = 5;
 
   //////////////////////////////////////////////////////////////////////////////
   // On effectue le produit et la somme de matrices (alpha * tA) * B + (beta * C)

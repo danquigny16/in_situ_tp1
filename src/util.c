@@ -16,7 +16,7 @@ void affiche(int M, int N, double *A, int lda, FILE * flux){
   for (int i = 0; i < M; i++){
     // colonne
     for (int j = 0; j < N; j++){
-      fprintf(flux, "%f  ", A[i + j * lda]);
+      fprintf(flux, "%12.6f  ", A[i + j * lda]);
     }
     // fin de la ligne
     fprintf(flux, "\n");
@@ -32,7 +32,7 @@ Affiche le vecteur X
 */
 void affiche_vecteur(int N, double *X, int lda, FILE * flux){
   for (int i = 0; i < N; i++){
-    fprintf(flux, "%f", X[i * lda]);
+    fprintf(flux, "%12.6f", X[i * lda]);
     fprintf(flux, "\n");
   }
 }
