@@ -6,8 +6,11 @@
 
 double my_ddot(const int N, const double *X, const int incX, const double *Y, const int incY);
 double my_ddot_unroll(const int N, const double *X, const int incX, const double *Y, const int incY);
+double my_ddot_openmp(const int N, const double *X, const int incX, const double *Y, const int incY);
+double my_ddot_openmp_simd(const int N, const double *X, const int incX, const double *Y, const int incY);
 double my_ddot_avx2(const int N, const double *X, const int incX, const double *Y, const int incY);
 double my_ddot_avx2_fma(const int N, const double *X, const int incX, const double *Y, const int incY);
+double my_ddot_avx2_fma_openmp(const int N, const double *X, const int incX, const double *Y, const int incY);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Produit de matrices
