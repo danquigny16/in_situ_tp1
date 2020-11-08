@@ -52,7 +52,7 @@ void my_dgetrf(const enum CBLAS_ORDER Order, int M, int N, double *A, int lda, i
   //////////////////////////////////////////////////////////////////////////////
   // Pour cette fonction on suppose dans l'énoncé qu'on est en CblasColMajor
   if (Order != CblasColMajor || ipiv != NULL || M != N){
-    printf("erreur dans \"my_dgetrf_block_safe\" : condition de l'énoncé non respecté\n");
+    printf("erreur dans \"my_dgetrf\" : condition de l'énoncé non respecté\n");
     exit(0);
   }
 
@@ -157,7 +157,7 @@ void my_dgetrf_openmp(const enum CBLAS_ORDER Order, int M, int N, double *A, int
   //////////////////////////////////////////////////////////////////////////////
   // Pour cette fonction on suppose dans l'énoncé qu'on est en CblasColMajor
   if (Order != CblasColMajor || ipiv != NULL || M != N){
-    printf("erreur dans \"my_dgetrf_block_safe\" : condition de l'énoncé non respecté\n");
+    printf("erreur dans \"my_dgetrf_openmp\" : condition de l'énoncé non respecté\n");
     exit(0);
   }
 
