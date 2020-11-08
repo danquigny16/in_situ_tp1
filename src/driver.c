@@ -804,6 +804,8 @@ void test_factorisation_LU(){
   printf("*************** TEST FACTORISATION LU ***************\n");
   printf("*****************************************************\n");
 
+  printf("\n\n***** test de resultat en seq *****\n\n");
+
   // Initialisation des vecteurs
   double * vec = vecteur(5);
   double * mat = matrice(5, 5);
@@ -836,24 +838,25 @@ void test_factorisation_LU(){
   free_matrice(mat);
 
   //////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////
-  printf("\n\n++++++++++++++++++++ test +++++++++++++++++++++++++\n\n");
+  printf("\n\n***** test de resultat par block *****\n\n");
+
+  int size = 10;
 
   // Initialisation des vecteurs
-  vec = vecteur(10);
-  mat = matrice(10, 10);
+  vec = vecteur(size);
+  mat = matrice(size, size);
 
   // Initialisation des deux vecteurs
-  init_vecteur(10, 1, vec);
+  init_vecteur(size, 1, vec);
   // Notre init_matrice donne des divisions par zéro, on l'évite
-  init_2_matrice(10, 10, 10, mat);
+  init_2_matrice(size, size, size, mat);
 
   // Affichage des résultats
   printf("\n----- Matrice -----\n\n");
-  affiche(10, 10, mat, 10, stdout);
+  affiche(size, size, mat, size, stdout);
 
   printf("\n----- Vecteur -----\n\n");
-  affiche_vecteur(10, vec, 1, stdout);
+  affiche_vecteur(size, vec, 1, stdout);
 
   printf("\n----- Resultat attendue -----\n\n");
   printf("0.043652\n");
@@ -867,14 +870,72 @@ void test_factorisation_LU(){
   printf("0.002012\n");
   printf("0.001960\n");
 
-  my_dgesv(CblasColMajor, 10, 1, mat, 10, NULL, vec, 1);
+  my_dgesv(CblasColMajor, size, 1, mat, size, NULL, vec, 1);
   printf("\n----- Resultat obtenue -----\n\n");
-  affiche_vecteur(10, vec, 1, stdout);
+  affiche_vecteur(size, vec, 1, stdout);
 
   // Libération mémoire des précédents vecteurs
   free_vecteur(vec);
   free_matrice(mat);
+
   //////////////////////////////////////////////////////////////////////////////
+
+  printf("\n\n***** test de performance en seq *****\n\n");
+
+  // Initialisation des variables
+  int m = 100;
+  clock_t debut, fin;
+  double temps;
+
+  while (m <= 1200){
+    // Allocation de deux vecteurs de taille m
+    mat = matrice(m, m);
+    init_2_matrice(m, m, m, mat);
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    // dgetrf seq
+    debut = clock();
+    my_dgetf2(CblasColMajor, m, m, mat, m, NULL);
+    fin = clock();
+
+    // Affichage des performances
+    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    printf("(dgetf2)        Performance obtenu pour une matrice de taille %7d : %12.6f s\n", m, temps);
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    // dgetrf par block
+    debut = clock();
+    my_dgetrf(CblasColMajor, m, m, mat, m, NULL);
+    fin = clock();
+
+    // Affichage des performances
+    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    printf("(dgetrf)        Performance obtenu pour une matrice de taille %7d : %12.6f s\n", m, temps);
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    // dgetrf par block avec openmp
+    debut = clock();
+    my_dgetrf_openmp(CblasColMajor, m, m, mat, m, NULL);
+    fin = clock();
+
+    // Affichage des performances
+    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    printf("(dgetrf openmp) Performance obtenu pour une matrice de taille %7d : %12.6f s\n", m, temps);
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    printf("\n");
+
+    // Libération mémoire des précédents vecteurs
+    free_matrice(mat);
+
+    // Increment de m de 25%
+    m += 100;
+  }
+
   //////////////////////////////////////////////////////////////////////////////
 
   // Fin du test

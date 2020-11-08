@@ -681,6 +681,79 @@ void my_dgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, c
   }
 }
 
+/**
+Effectue : C <- alpha * (t)A * (t)B + beta * C
+Avec les tailles : -A : M*K
+                   -B : K*N
+                   -C : M*N
+@param Order : Indique si les matrices A, B et C sont stockées en CblasRowMajor ou en CblasColMajor
+@param TransA : Indique si on doit prendre la matrice A tel quel ou sa transposé
+@param TransB : Indique si on doit prendre la matrice B tel quel ou sa transposé
+@param M : Nombre de ligne de A / nombre de ligne de C
+@param N : nombre de colonne de B / nombre de colonne de C
+@param K : nombre de colonne de A / nombre de ligne de B
+@param Alpha : Scalaire alpha
+@param A : Matrice A
+@param lda : Leading dimension de A
+@param B : Matrice B
+@param ldb : Leading dimension de B
+@param beta : Scalaire beta
+@param C : Matrice C
+@param ldc : Leading dimension de C
+*/
+void dgemm_seq_opti(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE transA, const enum CBLAS_TRANSPOSE transB,
+                    const int M, const int N, const int K,
+                    const double alpha, const double *A, const int lda,
+                    const double *B, const int ldb,
+                    const double beta, double *C, const int ldc){
+  int m, n, k;
+
+  if (transA == CblasNoTrans){
+    if (transB == CblasNoTrans){
+      for (m = 0; m < M; m++){
+        for (n = 0; n < N; n++){
+          C[ldc * n + m] *= beta;
+          for (k = 0; k < K; k++){
+            C[ldc * n + m] += alpha * A[lda * k + m] * B[ldb * n + k];
+          }
+        }
+      }
+    }
+    else {
+      for (m = 0; m < M; m++){
+        for (n = 0; n < N; n++){
+          C[ldc * n + m] *= beta;
+          for (k = 0; k < K; k++){
+            C[ldc * n + m] += alpha * A[lda * k + m] * B[ldb * k + n];
+          }
+        }
+      }
+    }
+  }
+  else {
+    if (transB == CblasNoTrans){
+      for (m = 0; m < M; m++){
+        for (n = 0; n < N; n++){
+          C[ldc * n + m] *= beta;
+          for (k = 0; k < K; k++){
+            C[ldc * n + m] += alpha * A[lda * m + k] * B[ldb * n + k];
+          }
+        }
+      }
+    }
+    else {
+      for (m = 0; m < M; m++){
+        for (n = 0; n < N; n++){
+          C[ldc * n + m] *= beta;
+          for (k = 0; k < K; k++){
+            C[ldc * n + m] += alpha * A[lda * m + k] * B[ldb * k + n];
+          }
+        }
+      }
+    }
+  }
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Complétion de la bibliothèque blas

@@ -52,7 +52,7 @@ void my_dgetrf(const enum CBLAS_ORDER Order, int M, int N, double *A, int lda, i
   //////////////////////////////////////////////////////////////////////////////
   // Pour cette fonction on suppose dans l'énoncé qu'on est en CblasColMajor
   if (Order != CblasColMajor || ipiv != NULL || M != N){
-    printf("erreur dans \"my_dgetf2\" : condition de l'énoncé non respecté\n");
+    printf("erreur dans \"my_dgetrf_block_safe\" : condition de l'énoncé non respecté\n");
     exit(0);
   }
 
@@ -61,8 +61,8 @@ void my_dgetrf(const enum CBLAS_ORDER Order, int M, int N, double *A, int lda, i
 
   // On définit une taille de bloc
   int bloc_size = 5;
-  // On suppose N multiple de bloc_size
   int nb_iter = N / bloc_size;
+  int bloc_size_remain = N % bloc_size;
 
   for (int k = 0; k < nb_iter; k++){
     ////////////////////////////////////////////////////////////////////////////
@@ -79,6 +79,10 @@ void my_dgetrf(const enum CBLAS_ORDER Order, int M, int N, double *A, int lda, i
       double *AIK = A + (I + K * lda);
       my_dtrsm(Order, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, bloc_size, bloc_size, 1, AKK, lda, AIK, lda);
     }
+    int I = nb_iter * bloc_size;
+    // UKK dans AKK
+    double *AIK = A + (I + K * lda);
+    my_dtrsm(Order, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, bloc_size_remain, bloc_size, 1, AKK, lda, AIK, lda);
 
     ////////////////////////////////////////////////////////////////////////////
     // Résolution AKJ = LKK * UKJ
@@ -88,6 +92,10 @@ void my_dgetrf(const enum CBLAS_ORDER Order, int M, int N, double *A, int lda, i
       double *AKJ = A + (K + J * lda);
       my_dtrsm(Order, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, bloc_size, bloc_size, 1, AKK, lda, AKJ, lda);
     }
+    int J = nb_iter * bloc_size;
+    // UKK dans AKK
+    double *AKJ = A + (K + J * lda);
+    my_dtrsm(Order, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, bloc_size, bloc_size_remain, 1, AKK, lda, AKJ, lda);
 
     ////////////////////////////////////////////////////////////////////////////
     // Faire AIJ -= LIK * UKJ
@@ -99,10 +107,148 @@ void my_dgetrf(const enum CBLAS_ORDER Order, int M, int N, double *A, int lda, i
         double *LIK = A + (I + K * lda);
         double *UKJ = A + (K + J * lda);
         double *AIJ = A + (I + J * lda);
-        my_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, bloc_size, bloc_size, bloc_size, -1, LIK, lda, UKJ, lda, 0, AIJ, lda);
+        dgemm_seq_opti(CblasColMajor, CblasNoTrans, CblasNoTrans, bloc_size, bloc_size, bloc_size, -1, LIK, lda, UKJ, lda, 1, AIJ, lda);
       }
+      //derniere colonne
+      int J = nb_iter * bloc_size;
+      // Sous-matrices
+      double *LIK = A + (I + K * lda);
+      double *UKJ = A + (K + J * lda);
+      double *AIJ = A + (I + J * lda);
+      dgemm_seq_opti(CblasColMajor, CblasNoTrans, CblasNoTrans, bloc_size, bloc_size_remain, bloc_size, -1, LIK, lda, UKJ, lda, 1, AIJ, lda);
     }
+    //dernier ligne
+    I = nb_iter * bloc_size;
+    for (int j = k + 1; j < nb_iter; j++){
+      int J = j * bloc_size;
+      // Sous-matrices
+      double *LIK = A + (I + K * lda);
+      double *UKJ = A + (K + J * lda);
+      double *AIJ = A + (I + J * lda);
+      dgemm_seq_opti(CblasColMajor, CblasNoTrans, CblasNoTrans, bloc_size_remain, bloc_size, bloc_size, -1, LIK, lda, UKJ, lda, 1, AIJ, lda);
+    }
+    //dernier block, celui à la derniere ligne et derniere colonne
+    I = nb_iter * bloc_size;
+    J = nb_iter * bloc_size;
+    // Sous-matrices
+    double *LIK = A + (I + K * lda);
+    double *UKJ = A + (K + J * lda);
+    double *AIJ = A + (I + J * lda);
+    dgemm_seq_opti(CblasColMajor, CblasNoTrans, CblasNoTrans, bloc_size_remain, bloc_size_remain, bloc_size, -1, LIK, lda, UKJ, lda, 1, AIJ, lda);
+
+    ////////////////////////////////////////////////////////////////////////////
   }
+  int K = nb_iter * bloc_size;
+  double *AKK = A + (K + K * lda);
+  my_dgetf2(Order, bloc_size_remain, bloc_size_remain, AKK, lda, NULL);
+}
+
+/**
+On effectue la factorisation LU de la matrice A par block avec openmp
+Ne gère pas les cas où il y a des division par 0
+@param Order : Indique si la matrice A est stocké en CblasRowMajor ou en CblasColMajor
+@param M : Nombre de ligne de A
+@param N : nombre de colonne de A
+@param A : Matrice A
+@param lda : Leading dimension de A
+@param ipiv : Pivot pour résoudre le problème des divisions par 0
+*/
+void my_dgetrf_openmp(const enum CBLAS_ORDER Order, int M, int N, double *A, int lda, int *ipiv){
+  //////////////////////////////////////////////////////////////////////////////
+  // Pour cette fonction on suppose dans l'énoncé qu'on est en CblasColMajor
+  if (Order != CblasColMajor || ipiv != NULL || M != N){
+    printf("erreur dans \"my_dgetrf_block_safe\" : condition de l'énoncé non respecté\n");
+    exit(0);
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  // Factorisation LU par block
+
+  // On définit une taille de bloc
+  int bloc_size = 20;
+  int nb_iter = N / bloc_size;
+  int bloc_size_remain = N % bloc_size;
+
+  for (int k = 0; k < nb_iter; k++){
+    ////////////////////////////////////////////////////////////////////////////
+    // Factorisation AKK = LKK * UKK
+    int K = k * bloc_size;
+    double *AKK = A + (K + K * lda);
+    my_dgetf2(Order, bloc_size, bloc_size, AKK, lda, NULL);
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Résolution AIK = LIK * UKK
+    #pragma omp parallel for
+    for (int i = k + 1; i < nb_iter; i++){
+      int I = i * bloc_size;
+      // UKK dans AKK
+      double *AIK = A + (I + K * lda);
+      my_dtrsm(Order, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, bloc_size, bloc_size, 1, AKK, lda, AIK, lda);
+    }
+    int I = nb_iter * bloc_size;
+    // UKK dans AKK
+    double *AIK = A + (I + K * lda);
+    my_dtrsm(Order, CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, bloc_size_remain, bloc_size, 1, AKK, lda, AIK, lda);
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Résolution AKJ = LKK * UKJ
+    #pragma omp parallel for
+    for (int j = k + 1; j < nb_iter; j++){
+      int J = j * bloc_size;
+      // UKK dans AKK
+      double *AKJ = A + (K + J * lda);
+      my_dtrsm(Order, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, bloc_size, bloc_size, 1, AKK, lda, AKJ, lda);
+    }
+    int J = nb_iter * bloc_size;
+    // UKK dans AKK
+    double *AKJ = A + (K + J * lda);
+    my_dtrsm(Order, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, bloc_size, bloc_size_remain, 1, AKK, lda, AKJ, lda);
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Faire AIJ -= LIK * UKJ
+    #pragma omp parallel for
+    for (int i = k + 1; i < nb_iter; i++){
+      int I = i * bloc_size;
+      for (int j = k + 1; j < nb_iter; j++){
+        int J = j * bloc_size;
+        // Sous-matrices
+        double *LIK = A + (I + K * lda);
+        double *UKJ = A + (K + J * lda);
+        double *AIJ = A + (I + J * lda);
+        dgemm_seq_opti(CblasColMajor, CblasNoTrans, CblasNoTrans, bloc_size, bloc_size, bloc_size, -1, LIK, lda, UKJ, lda, 1, AIJ, lda);
+      }
+      //derniere colonne
+      int J = nb_iter * bloc_size;
+      // Sous-matrices
+      double *LIK = A + (I + K * lda);
+      double *UKJ = A + (K + J * lda);
+      double *AIJ = A + (I + J * lda);
+      dgemm_seq_opti(CblasColMajor, CblasNoTrans, CblasNoTrans, bloc_size, bloc_size_remain, bloc_size, -1, LIK, lda, UKJ, lda, 1, AIJ, lda);
+    }
+    //dernier ligne
+    I = nb_iter * bloc_size;
+    for (int j = k + 1; j < nb_iter; j++){
+      int J = j * bloc_size;
+      // Sous-matrices
+      double *LIK = A + (I + K * lda);
+      double *UKJ = A + (K + J * lda);
+      double *AIJ = A + (I + J * lda);
+      dgemm_seq_opti(CblasColMajor, CblasNoTrans, CblasNoTrans, bloc_size_remain, bloc_size, bloc_size, -1, LIK, lda, UKJ, lda, 1, AIJ, lda);
+    }
+    //dernier block, celui à la derniere ligne et derniere colonne
+    I = nb_iter * bloc_size;
+    J = nb_iter * bloc_size;
+    // Sous-matrices
+    double *LIK = A + (I + K * lda);
+    double *UKJ = A + (K + J * lda);
+    double *AIJ = A + (I + J * lda);
+    dgemm_seq_opti(CblasColMajor, CblasNoTrans, CblasNoTrans, bloc_size_remain, bloc_size_remain, bloc_size, -1, LIK, lda, UKJ, lda, 1, AIJ, lda);
+
+    ////////////////////////////////////////////////////////////////////////////
+  }
+  int K = nb_iter * bloc_size;
+  double *AKK = A + (K + K * lda);
+  my_dgetf2(Order, bloc_size_remain, bloc_size_remain, AKK, lda, NULL);
 }
 
 /**
@@ -232,8 +378,12 @@ void my_dgesv(const enum CBLAS_ORDER Order, const int N, int nrhs, double *A, in
   // Résolution de AX = B
   //my_dgetf2(Order, N, N, A, lda, NULL);
   my_dgetrf(Order, N, N, A, lda, NULL);
-  printf("\n----------- matrice factoriser -----------------\n\n");
-  affiche(N, N, A, lda, stdout);
+  //my_dgetrf_openmp(Order, N, N, A, lda, NULL);
+
+  // pour debug LU
+  // printf("\n----------- matrice factoriser -----------------\n\n");
+  // affiche(N, N, A, lda, stdout);
+
   my_dtrsm(Order, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, N, 1, 1, A, lda, B, ldb);
   my_dtrsm(Order, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, N, 1, 1, A, lda, B, ldb);
 }

@@ -9,7 +9,7 @@ AR=ar
 
 #option
 #CFLAGS=-Wall -Wextra -std=c99 -O3
-CFLAGS=-Wall -Wextra -mavx2 -mfma -O3
+CFLAGS=-Wall -Wextra -mavx2 -mfma -O3 -fopenmp
 ARFLAGS=-rc
 
 #dossiers
@@ -43,7 +43,7 @@ $(LIB)/libmylapack.a: $(BUILD)/util.o $(BUILD)/mylapack.o
 	$(AR) $(ARFLAGS) $@ $^
 
 $(BUILD)/driver: $(BUILD)/driver.o $(BUILD)/util.o $(LIB)/libmylapack.a $(LIB)/libmyblas.a
-	$(CC) $(BUILD)/driver.o $(BUILD)/util.o -L$(LIB)/ -lmyblas -lmylapack -o $@
+	$(CC) $(BUILD)/driver.o $(BUILD)/util.o -L$(LIB)/ -lmyblas -lmylapack -fopenmp -o $@
 
 ################################################################################
 #partie exécution
