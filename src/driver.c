@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <omp.h>
 
 #include "util.h"
 #include "myblas.h"
@@ -157,7 +158,7 @@ void test_my_ddot(){
 
   // Initialisation des variables
   int m = 50;
-  clock_t debut, fin;
+  double debut, fin;
 
   // Tests pour des tailles de vecteurs croissant
   while (m < 1000000){
@@ -168,12 +169,12 @@ void test_my_ddot(){
     ////////////////////////////////////////////////////////////////////////////
 
     // Produit scalaire
-    debut = clock();
+    debut = omp_get_wtime();
     my_ddot(m, vec1, 1, vec2, 1);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    double temps0 = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    double temps0 = fin - debut;
     double flop = (double) (2 * m - 1); // m multiplication et m-1 addition
     double Mflop_s = (flop / temps0) / 1000000.0;
     printf("Performance obtenu pour des vecteurs de taille %7d :                         ", m);
@@ -188,12 +189,12 @@ void test_my_ddot(){
     vec2 = vecteur(m);
 
     // Produit scalaire unroll
-    debut = clock();
+    debut = omp_get_wtime();
     my_ddot_unroll(m, vec1, 1, vec2, 1);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    double temps = fin - debut;
     flop = (double) (2 * m - 1); // m multiplication et m-1 addition
     Mflop_s = (flop / temps) / 1000000.0;
     printf("Performance obtenu pour des vecteurs de taille %7d avec unroll :             ", m);
@@ -209,12 +210,12 @@ void test_my_ddot(){
     vec2 = vecteur(m);
 
     // Produit scalaire openmp
-    debut = clock();
+    debut = omp_get_wtime();
     my_ddot_openmp(m, vec1, 1, vec2, 1);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    temps = fin - debut;
     flop = (double) (2 * m - 1); // m multiplication et m-1 addition
     Mflop_s = (flop / temps) / 1000000.0;
     printf("Performance obtenu pour des vecteurs de taille %7d avec openmp :             ", m);
@@ -230,12 +231,12 @@ void test_my_ddot(){
     vec2 = vecteur(m);
 
     // Produit scalaire openmp simd
-    debut = clock();
+    debut = omp_get_wtime();
     my_ddot_openmp_simd(m, vec1, 1, vec2, 1);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    temps = fin - debut;
     flop = (double) (2 * m - 1); // m multiplication et m-1 addition
     Mflop_s = (flop / temps) / 1000000.0;
     printf("Performance obtenu pour des vecteurs de taille %7d avec openmp simd :        ", m);
@@ -251,12 +252,12 @@ void test_my_ddot(){
     vec2 = vecteur(m);
 
     // Produit scalaire avx2
-    debut = clock();
+    debut = omp_get_wtime();
     my_ddot_avx2(m, vec1, 1, vec2, 1);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    temps = fin - debut;
     flop = (double) (2 * m - 1); // m multiplication et m-1 addition
     Mflop_s = (flop / temps) / 1000000.0;
     printf("Performance obtenu pour des vecteurs de taille %7d avec avx2 :               ", m);
@@ -272,12 +273,12 @@ void test_my_ddot(){
     vec2 = vecteur(m);
 
     // Produit scalaire avx2-fma
-    debut = clock();
+    debut = omp_get_wtime();
     my_ddot_avx2_fma(m, vec1, 1, vec2, 1);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    temps = fin - debut;
     flop = (double) (2 * m - 1); // m multiplication et m-1 addition
     Mflop_s = (flop / temps) / 1000000.0;
     printf("Performance obtenu pour des vecteurs de taille %7d avec avx2-fma :           ", m);
@@ -293,12 +294,12 @@ void test_my_ddot(){
     vec2 = vecteur(m);
 
     // Produit scalaire avx2-fma et openmp
-    debut = clock();
+    debut = omp_get_wtime();
     my_ddot_avx2_fma_openmp(m, vec1, 1, vec2, 1);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    temps = fin - debut;
     flop = (double) (2 * m - 1); // m multiplication et m-1 addition
     Mflop_s = (flop / temps) / 1000000.0;
     printf("Performance obtenu pour des vecteurs de taille %7d avec avx2-fma et openmp : ", m);
@@ -334,12 +335,12 @@ void test_my_ddot(){
     ////////////////////////////////////////////////////////////////////////////
 
     // Produit scalaire
-    debut = clock();
+    debut = omp_get_wtime();
     my_ddot(m, mat1, 10, mat2, 10);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    double temps0 = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    double temps0 = fin - debut;
     double flop = (double) (2 * m - 1); // m multiplication et m-1 addition
     double Mflop_s = (flop / temps0) / 1000000.0;
     printf("Performance obtenu pour des vecteurs (1ere ligne matrice) de taille %7d :                         ", m);
@@ -354,12 +355,12 @@ void test_my_ddot(){
     mat2 = matrice(10, m);
 
     // Produit scalaire unroll
-    debut = clock();
+    debut = omp_get_wtime();
     my_ddot_unroll(m, mat1, 10, mat2, 10);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    double temps = fin - debut;
     flop = (double) (2 * m - 1); // m multiplication et m-1 addition
     Mflop_s = (flop / temps) / 1000000.0;
     printf("Performance obtenu pour des vecteurs (1ere ligne matrice) de taille %7d avec unroll :             ", m);
@@ -375,12 +376,12 @@ void test_my_ddot(){
     mat2 = matrice(10, m);
 
     // Produit scalaire openmp
-    debut = clock();
+    debut = omp_get_wtime();
     my_ddot_openmp(m, mat1, 10, mat2, 10);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    temps = fin - debut;
     flop = (double) (2 * m - 1); // m multiplication et m-1 addition
     Mflop_s = (flop / temps) / 1000000.0;
     printf("Performance obtenu pour des vecteurs (1ere ligne matrice) de taille %7d avec openmp :             ", m);
@@ -396,12 +397,12 @@ void test_my_ddot(){
     mat2 = matrice(10, m);
 
     // Produit scalaire openmp simd
-    debut = clock();
+    debut = omp_get_wtime();
     my_ddot_openmp_simd(m, mat1, 10, mat2, 10);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    temps = fin - debut;
     flop = (double) (2 * m - 1); // m multiplication et m-1 addition
     Mflop_s = (flop / temps) / 1000000.0;
     printf("Performance obtenu pour des vecteurs (1ere ligne matrice) de taille %7d avec openmp simd :        ", m);
@@ -417,12 +418,12 @@ void test_my_ddot(){
     mat2 = matrice(10, m);
 
     // Produit scalaire avx2
-    debut = clock();
+    debut = omp_get_wtime();
     my_ddot_avx2(m, mat1, 10, mat2, 10);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    temps = fin - debut;
     flop = (double) (2 * m - 1); // m multiplication et m-1 addition
     Mflop_s = (flop / temps) / 1000000.0;
     printf("Performance obtenu pour des vecteurs (1ere ligne matrice) de taille %7d avec avx2 :               ", m);
@@ -438,12 +439,12 @@ void test_my_ddot(){
     mat2 = matrice(10, m);
 
     // Produit scalaire avx2-fma
-    debut = clock();
+    debut = omp_get_wtime();
     my_ddot_avx2_fma(m, mat1, 10, mat2, 10);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    temps = fin - debut;
     flop = (double) (2 * m - 1); // m multiplication et m-1 addition
     Mflop_s = (flop / temps) / 1000000.0;
     printf("Performance obtenu pour des vecteurs (1ere ligne matrice) de taille %7d avec avx2-fma :           ", m);
@@ -459,12 +460,12 @@ void test_my_ddot(){
     mat2 = matrice(10, m);
 
     // Produit scalaire avx2-fma et openmp
-    debut = clock();
+    debut = omp_get_wtime();
     my_ddot_avx2_fma_openmp(m, mat1, 10, mat2, 10);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    temps = fin - debut;
     flop = (double) (2 * m - 1); // m multiplication et m-1 addition
     Mflop_s = (flop / temps) / 1000000.0;
     printf("Performance obtenu pour des vecteurs (1ere ligne matrice) de taille %7d avec avx2-fma et openmp : ", m);
@@ -500,12 +501,12 @@ void test_my_ddot(){
     ////////////////////////////////////////////////////////////////////////////
 
     // Produit scalaire
-    debut = clock();
+    debut = omp_get_wtime();
     my_ddot(m, mat1, m, mat2, m);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    double temps0 = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    double temps0 = fin - debut;
     double flop = (double) (2 * m - 1); // m multiplication et m-1 addition
     double Mflop_s = (flop / temps0) / 1000000.0;
     printf("Performance obtenu pour des vecteurs (1ere ligne matrice) de taille %7d :                         ", m);
@@ -520,12 +521,12 @@ void test_my_ddot(){
     mat2 = matrice(m, m);
 
     // Produit scalaire unroll
-    debut = clock();
+    debut = omp_get_wtime();
     my_ddot_unroll(m, mat1, m, mat2, m);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    double temps = fin - debut;
     flop = (double) (2 * m - 1); // m multiplication et m-1 addition
     Mflop_s = (flop / temps) / 1000000.0;
     printf("Performance obtenu pour des vecteurs (1ere ligne matrice) de taille %7d avec unroll :             ", m);
@@ -541,12 +542,12 @@ void test_my_ddot(){
     mat2 = matrice(m, m);
 
     // Produit scalaire openmp
-    debut = clock();
+    debut = omp_get_wtime();
     my_ddot_openmp(m, mat1, m, mat2, m);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    temps = fin - debut;
     flop = (double) (2 * m - 1); // m multiplication et m-1 addition
     Mflop_s = (flop / temps) / 1000000.0;
     printf("Performance obtenu pour des vecteurs (1ere ligne matrice) de taille %7d avec openmp :             ", m);
@@ -562,12 +563,12 @@ void test_my_ddot(){
     mat2 = matrice(m, m);
 
     // Produit scalaire openmp simd
-    debut = clock();
+    debut = omp_get_wtime();
     my_ddot_openmp_simd(m, mat1, m, mat2, m);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    temps = fin - debut;
     flop = (double) (2 * m - 1); // m multiplication et m-1 addition
     Mflop_s = (flop / temps) / 1000000.0;
     printf("Performance obtenu pour des vecteurs (1ere ligne matrice) de taille %7d avec openmp simd :        ", m);
@@ -583,12 +584,12 @@ void test_my_ddot(){
     mat2 = matrice(m, m);
 
     // Produit scalaire avx2
-    debut = clock();
+    debut = omp_get_wtime();
     my_ddot_avx2(m, mat1, m, mat2, m);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    temps = fin - debut;
     flop = (double) (2 * m - 1); // m multiplication et m-1 addition
     Mflop_s = (flop / temps) / 1000000.0;
     printf("Performance obtenu pour des vecteurs (1ere ligne matrice) de taille %7d avec avx2 :               ", m);
@@ -604,12 +605,12 @@ void test_my_ddot(){
     mat2 = matrice(m, m);
 
     // Produit scalaire avx2-fma
-    debut = clock();
+    debut = omp_get_wtime();
     my_ddot_avx2_fma(m, mat1, m, mat2, m);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    temps = fin - debut;
     flop = (double) (2 * m - 1); // m multiplication et m-1 addition
     Mflop_s = (flop / temps) / 1000000.0;
     printf("Performance obtenu pour des vecteurs (1ere ligne matrice) de taille %7d avec avx2-fma :           ", m);
@@ -625,12 +626,12 @@ void test_my_ddot(){
     mat2 = matrice(m, m);
 
     // Produit scalaire avx2-fma et openmp
-    debut = clock();
+    debut = omp_get_wtime();
     my_ddot_avx2_fma_openmp(m, mat1, m, mat2, m);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    temps = fin - debut;
     flop = (double) (2 * m - 1); // m multiplication et m-1 addition
     Mflop_s = (flop / temps) / 1000000.0;
     printf("Performance obtenu pour des vecteurs (1ere ligne matrice) de taille %7d avec avx2-fma et openmp : ", m);
@@ -764,7 +765,7 @@ void test_my_dgemm(){
   printf("\n***** Test de temps d'execution *****\n");
 
   // Variable pour mesure du temps
-  clock_t debut, fin;
+  double debut, fin;
 
   //////////////////////////////////////////////////////////////////////////////
   // Tests pour des tailles de matrices croissantes avec l'ordre kij
@@ -777,12 +778,12 @@ void test_my_dgemm(){
     matrice_zero(size_mat, size_mat, size_mat, C);
 
     // Produit de matrices
-    debut = clock();
+    debut = omp_get_wtime();
     my_dgemm_scalaire_kij(CblasColMajor, CblasTrans, CblasNoTrans, size_mat, size_mat, size_mat, 1, A, 5, B, 5, 0, C, 5);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    double temps = fin - debut;
     // (size_mat ligne) * (size_mat colonne) * (size_mat multiplication et size_mat - 1 addition)
     int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
     double Mflop_s = (Mflop / temps);
@@ -804,12 +805,12 @@ void test_my_dgemm(){
     matrice_zero(size_mat, size_mat, size_mat, C);
 
     // Produit de matrices
-    debut = clock();
+    debut = omp_get_wtime();
     my_dgemm_scalaire_ijk(CblasColMajor, CblasTrans, CblasNoTrans, size_mat, size_mat, size_mat, 1, A, 5, B, 5, 0, C, 5);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    double temps = fin - debut;
     // (size_mat ligne) * (size_mat colonne) * (size_mat multiplication et size_mat - 1 addition)
     int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
     double Mflop_s = (Mflop / temps);
@@ -832,12 +833,12 @@ void test_my_dgemm(){
     matrice_zero(size_mat, size_mat, size_mat, C);
 
     // Produit de matrices
-    debut = clock();
+    debut = omp_get_wtime();
     my_dgemm_scalaire_jik(CblasColMajor, CblasTrans, CblasNoTrans, size_mat, size_mat, size_mat, 1, A, 5, B, 5, 0, C, 5);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    double temps = fin - debut;
     // (size_mat ligne) * (size_mat colonne) * (size_mat multiplication et size_mat - 1 addition)
     int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
     double Mflop_s = (Mflop / temps);
@@ -860,12 +861,12 @@ void test_my_dgemm(){
     matrice_zero(size_mat, size_mat, size_mat, C);
 
     // Produit de matrices
-    debut = clock();
+    debut = omp_get_wtime();
     my_dgemm_scalaire_kji(CblasColMajor, CblasTrans, CblasNoTrans, size_mat, size_mat, size_mat, 1, A, 5, B, 5, 0, C, 5);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    double temps = fin - debut;
     // (size_mat ligne) * (size_mat colonne) * (size_mat multiplication et size_mat - 1 addition)
     int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
     double Mflop_s = (Mflop / temps);
@@ -887,12 +888,12 @@ void test_my_dgemm(){
     matrice_zero(size_mat, size_mat, size_mat, C);
 
     // Produit de matrices
-    debut = clock();
+    debut = omp_get_wtime();
     my_dgemm_scalaire_jik_unroll(CblasColMajor, CblasTrans, CblasNoTrans, size_mat, size_mat, size_mat, 1, A, 5, B, 5, 0, C, 5);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    double temps = fin - debut;
     // (size_mat ligne) * (size_mat colonne) * (size_mat multiplication et size_mat - 1 addition)
     int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
     double Mflop_s = (Mflop / temps);
@@ -915,12 +916,12 @@ void test_my_dgemm(){
     matrice_zero(size_mat, size_mat, size_mat, C);
 
     // Produit de matrices
-    debut = clock();
+    debut = omp_get_wtime();
     my_dgemm(CblasColMajor, CblasTrans, CblasNoTrans, size_mat, size_mat, size_mat, 1, A, 5, B, 5, 0, C, 5);
-    fin = clock();
+    fin = omp_get_wtime();
 
     // Affichage des performances
-    double temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
+    double temps = fin - debut;
     // (size_mat ligne) * (size_mat colonne) * (size_mat multiplication et size_mat - 1 addition)
     int Mflop = (size_mat/1000 * size_mat/1000 * (2 * size_mat - 1));
     double Mflop_s = (Mflop / temps);
@@ -1107,7 +1108,7 @@ void test_factorisation_LU(){
   //////////////////////////////////////////////////////////////////////////////
   printf("\n\n***** test de resultat par block *****\n\n");
 
-  int size = 10;
+  int size = 11;
 
   // Initialisation des vecteurs
   vec = vecteur(size);
@@ -1126,16 +1127,28 @@ void test_factorisation_LU(){
   affiche_vecteur(size, vec, 1, stdout);
 
   printf("\n----- Resultat attendue -----\n\n");
-  printf("0.043652\n");
-  printf("0.005048\n");
-  printf("0.003370\n");
-  printf("0.002778\n");
-  printf("0.002475\n");
-  printf("0.002291\n");
-  printf("0.002168\n");
-  printf("0.002079\n");
-  printf("0.002012\n");
-  printf("0.001960\n");
+  // printf("0.043652\n");
+  // printf("0.005048\n");
+  // printf("0.003370\n");
+  // printf("0.002778\n");
+  // printf("0.002475\n");
+  // printf("0.002291\n");
+  // printf("0.002168\n");
+  // printf("0.002079\n");
+  // printf("0.002012\n");
+  // printf("0.001960\n");
+
+  printf("0.043843\n");
+  printf("0.004487\n");
+  printf("0.002913\n");
+  printf("0.002359\n");
+  printf("0.002077\n");
+  printf("0.001906\n");
+  printf("0.001791\n");
+  printf("0.001709\n");
+  printf("0.001647\n");
+  printf("0.001598\n");
+  printf("0.001559\n");
 
   my_dgesv(CblasColMajor, size, 1, mat, size, NULL, vec, 1);
   printf("\n----- Resultat obtenue -----\n\n");
@@ -1147,61 +1160,61 @@ void test_factorisation_LU(){
 
   //////////////////////////////////////////////////////////////////////////////
 
-  printf("\n\n***** test de performance en seq *****\n\n");
-
-  // Initialisation des variables
-  int m = 100;
-  clock_t debut, fin;
-  double temps;
-
-  while (m <= 1200){
-    // Allocation de deux vecteurs de taille m
-    mat = matrice(m, m);
-    init_2_matrice(m, m, m, mat);
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    // dgetrf seq
-    debut = clock();
-    my_dgetf2(CblasColMajor, m, m, mat, m, NULL);
-    fin = clock();
-
-    // Affichage des performances
-    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
-    printf("(dgetf2)        Performance obtenu pour une matrice de taille %7d : %12.6f s\n", m, temps);
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    // dgetrf par block
-    debut = clock();
-    my_dgetrf(CblasColMajor, m, m, mat, m, NULL);
-    fin = clock();
-
-    // Affichage des performances
-    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
-    printf("(dgetrf)        Performance obtenu pour une matrice de taille %7d : %12.6f s\n", m, temps);
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    // dgetrf par block avec openmp
-    debut = clock();
-    my_dgetrf_openmp(CblasColMajor, m, m, mat, m, NULL);
-    fin = clock();
-
-    // Affichage des performances
-    temps = ((double) (fin - debut)) / ((double) CLOCKS_PER_SEC);
-    printf("(dgetrf openmp) Performance obtenu pour une matrice de taille %7d : %12.6f s\n", m, temps);
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    printf("\n");
-
-    // Libération mémoire des précédents vecteurs
-    free_matrice(mat);
-
-    // Increment de m de 25%
-    m += 100;
-  }
+  // printf("\n\n***** test de performance en seq *****\n\n");
+  //
+  // // Initialisation des variables
+  // int m = 100;
+  // double debut, fin;
+  // double temps;
+  //
+  // while (m <= 1200){
+  //   // Allocation de deux vecteurs de taille m
+  //   mat = matrice(m, m);
+  //   init_2_matrice(m, m, m, mat);
+  //
+  //   ////////////////////////////////////////////////////////////////////////////
+  //
+  //   // dgetrf seq
+  //   debut = omp_get_wtime();
+  //   my_dgetf2(CblasColMajor, m, m, mat, m, NULL);
+  //   fin = omp_get_wtime();
+  //
+  //   // Affichage des performances
+  //   temps = fin - debut;
+  //   printf("(dgetf2)        Performance obtenu pour une matrice de taille %7d : %12.6f s\n", m, temps);
+  //
+  //   ////////////////////////////////////////////////////////////////////////////
+  //
+  //   // dgetrf par block
+  //   debut = omp_get_wtime();
+  //   my_dgetrf(CblasColMajor, m, m, mat, m, NULL);
+  //   fin = omp_get_wtime();
+  //
+  //   // Affichage des performances
+  //   temps = fin - debut;
+  //   printf("(dgetrf)        Performance obtenu pour une matrice de taille %7d : %12.6f s\n", m, temps);
+  //
+  //   ////////////////////////////////////////////////////////////////////////////
+  //
+  //   // dgetrf par block avec openmp
+  //   debut = omp_get_wtime();
+  //   my_dgetrf_openmp(CblasColMajor, m, m, mat, m, NULL);
+  //   fin = omp_get_wtime();
+  //
+  //   // Affichage des performances
+  //   temps = fin - debut;
+  //   printf("(dgetrf openmp) Performance obtenu pour une matrice de taille %7d : %12.6f s\n", m, temps);
+  //
+  //   ////////////////////////////////////////////////////////////////////////////
+  //
+  //   printf("\n");
+  //
+  //   // Libération mémoire des précédents vecteurs
+  //   free_matrice(mat);
+  //
+  //   // Increment de m de 25%
+  //   m += 100;
+  // }
 
   //////////////////////////////////////////////////////////////////////////////
 
@@ -1216,10 +1229,10 @@ void test_factorisation_LU(){
 int main(/*int argc, char ** argv*/){
   // test_alloc_et_free();
   // test_initialisation();
-  test_my_ddot();
+  // test_my_ddot();
   // test_my_dgemm();
   // test_blas();
-  // test_factorisation_LU();
+  test_factorisation_LU();
 
   return 0;
 }

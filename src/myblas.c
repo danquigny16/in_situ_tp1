@@ -1,5 +1,6 @@
 #include "myblas.h"
 
+
 ////////////////////////////////////////////////////////////////////////////////
 // Produit scalaire
 
@@ -62,7 +63,7 @@ Ici on se sert de la parallelisation de openmp
 double my_ddot_openmp(const int N, const double *X, const int incX, const double *Y, const int incY){
   int res = 0;
 
-  #pragma omp parallel for
+  #pragma omp parallel for reduction(+:res)
   for (int i = 0; i < N; i++){
     res += X[i * incX] * Y[i * incY];
   }

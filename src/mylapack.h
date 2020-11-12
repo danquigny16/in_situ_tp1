@@ -8,6 +8,7 @@
 void my_dgetf2(const enum CBLAS_ORDER Order, int M, int N, double *A, int lda, int *ipiv);
 void my_dgetrf(const enum CBLAS_ORDER Order, int M, int N, double *A, int lda, int *ipiv);
 void my_dgetrf_openmp(const enum CBLAS_ORDER Order, int M, int N, double *A, int lda, int *ipiv);
+void dgetrf_seq_opti(const enum CBLAS_ORDER Order, int M, int N, double *A, int lda, int *ipiv);
 void my_dtrsm(const enum CBLAS_ORDER Order, const enum CBLAS_SIDE Side,
               const enum CBLAS_UPLO Uplo, const enum CBLAS_TRANSPOSE TransA,
               const enum CBLAS_DIAG Diag, const int M, const int N,
