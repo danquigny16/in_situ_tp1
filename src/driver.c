@@ -1067,95 +1067,113 @@ void test_blas(){
 Fait les tests relatifs à la factorisation LU
 */
 void test_factorisation_LU(){
-  // Nom du test
-  printf("*****************************************************\n");
-  printf("*************** TEST FACTORISATION LU ***************\n");
-  printf("*****************************************************\n");
-
-  printf("\n\n***** test de resultat en seq *****\n\n");
-
-  // Initialisation des vecteurs
-  double * vec = vecteur(5);
-  double * mat = matrice(5, 5);
-
-  // Initialisation des deux vecteurs
-  init_vecteur(5, 1, vec);
-  // Notre init_matrice donne des divisions par zéro, on l'évite
-  init_2_matrice(5, 5, 5, mat);
-
-  // Affichage des résultats
-  printf("\n----- Matrice -----\n\n");
-  affiche(5, 5, mat, 5, stdout);
-
-  printf("\n----- Vecteur -----\n\n");
-  affiche_vecteur(5, vec, 1, stdout);
-
-  printf("\n----- Resultat attendue -----\n\n");
-  printf("[[0.0444439 ]\n");
-  printf(" [0.01093364]\n");
-  printf(" [0.00835592]\n");
-  printf(" [0.00740624]\n");
-  printf(" [0.0069124 ]]\n");
-
-  my_dgesv(CblasColMajor, 5, 1, mat, 5, NULL, vec, 1);
-  printf("\n----- Resultat obtenue -----\n\n");
-  affiche_vecteur(5, vec, 1, stdout);
-
-  // Libération mémoire des précédents vecteurs
-  free_vecteur(vec);
-  free_matrice(mat);
+  // // Nom du test
+  // printf("*****************************************************\n");
+  // printf("*************** TEST FACTORISATION LU ***************\n");
+  // printf("*****************************************************\n");
+  //
+  // printf("\n\n***** test de resultat en seq *****\n\n");
+  //
+  // // Initialisation des vecteurs
+  // double * vec = vecteur(5);
+  // double * mat = matrice(5, 5);
+  //
+  // // Initialisation des deux vecteurs
+  // init_vecteur(5, 1, vec);
+  // // Notre init_matrice donne des divisions par zéro, on l'évite
+  // init_2_matrice(5, 5, 5, mat);
+  //
+  // // Affichage des résultats
+  // printf("\n----- Matrice -----\n\n");
+  // affiche(5, 5, mat, 5, stdout);
+  //
+  // printf("\n----- Vecteur -----\n\n");
+  // affiche_vecteur(5, vec, 1, stdout);
+  //
+  // printf("\n----- Resultat attendue -----\n\n");
+  // printf("[[0.0444439 ]\n");
+  // printf(" [0.01093364]\n");
+  // printf(" [0.00835592]\n");
+  // printf(" [0.00740624]\n");
+  // printf(" [0.0069124 ]]\n");
+  //
+  // my_dgesv(CblasColMajor, 5, 1, mat, 5, NULL, vec, 1);
+  // printf("\n----- Resultat obtenue -----\n\n");
+  // affiche_vecteur(5, vec, 1, stdout);
+  //
+  // // Libération mémoire des précédents vecteurs
+  // free_vecteur(vec);
+  // free_matrice(mat);
+  //
+  // //////////////////////////////////////////////////////////////////////////////
+  // printf("\n\n***** test de resultat par block *****\n\n");
+  //
+  // int size = 11;
+  //
+  // // Initialisation des vecteurs
+  // vec = vecteur(size);
+  // mat = matrice(size, size);
+  //
+  // // Initialisation des deux vecteurs
+  // init_vecteur(size, 1, vec);
+  // // Notre init_matrice donne des divisions par zéro, on l'évite
+  // init_2_matrice(size, size, size, mat);
+  //
+  // // Affichage des résultats
+  // printf("\n----- Matrice -----\n\n");
+  // affiche(size, size, mat, size, stdout);
+  //
+  // printf("\n----- Vecteur -----\n\n");
+  // affiche_vecteur(size, vec, 1, stdout);
+  //
+  // printf("\n----- Resultat attendue -----\n\n");
+  // // printf("0.043652\n");
+  // // printf("0.005048\n");
+  // // printf("0.003370\n");
+  // // printf("0.002778\n");
+  // // printf("0.002475\n");
+  // // printf("0.002291\n");
+  // // printf("0.002168\n");
+  // // printf("0.002079\n");
+  // // printf("0.002012\n");
+  // // printf("0.001960\n");
+  //
+  // printf("0.043843\n");
+  // printf("0.004487\n");
+  // printf("0.002913\n");
+  // printf("0.002359\n");
+  // printf("0.002077\n");
+  // printf("0.001906\n");
+  // printf("0.001791\n");
+  // printf("0.001709\n");
+  // printf("0.001647\n");
+  // printf("0.001598\n");
+  // printf("0.001559\n");
+  //
+  // my_dgesv(CblasColMajor, size, 1, mat, size, NULL, vec, 1);
+  // printf("\n----- Resultat obtenue -----\n\n");
+  // affiche_vecteur(size, vec, 1, stdout);
+  //
+  // // Libération mémoire des précédents vecteurs
+  // free_vecteur(vec);
+  // free_matrice(mat);
 
   //////////////////////////////////////////////////////////////////////////////
-  printf("\n\n***** test de resultat par block *****\n\n");
 
-  int size = 11;
+  printf("************* Test rectangulaire qui pose pb ******************\n");
 
-  // Initialisation des vecteurs
-  vec = vecteur(size);
-  mat = matrice(size, size);
+  double *mat = matrice(57, 3);
 
-  // Initialisation des deux vecteurs
-  init_vecteur(size, 1, vec);
-  // Notre init_matrice donne des divisions par zéro, on l'évite
-  init_2_matrice(size, size, size, mat);
+  // init_2_matrice(57, 3, 57, mat);
+  // my_dgetf2_1(CblasColMajor, 57, 3, mat, 57, NULL);
+  // printf("\n----------- matrice factoriser -----------------\n\n");
+  // affiche(57, 3, mat, 57, stdout);
 
-  // Affichage des résultats
-  printf("\n----- Matrice -----\n\n");
-  affiche(size, size, mat, size, stdout);
+  init_2_matrice(57, 3, 57, mat);
+  dgetrf_seq_opti(CblasColMajor, 57, 3, mat, 57, NULL);
+  printf("\n----------- matrice factoriser -----------------\n\n");
+  affiche(57, 3, mat, 57, stdout);
 
-  printf("\n----- Vecteur -----\n\n");
-  affiche_vecteur(size, vec, 1, stdout);
-
-  printf("\n----- Resultat attendue -----\n\n");
-  // printf("0.043652\n");
-  // printf("0.005048\n");
-  // printf("0.003370\n");
-  // printf("0.002778\n");
-  // printf("0.002475\n");
-  // printf("0.002291\n");
-  // printf("0.002168\n");
-  // printf("0.002079\n");
-  // printf("0.002012\n");
-  // printf("0.001960\n");
-
-  printf("0.043843\n");
-  printf("0.004487\n");
-  printf("0.002913\n");
-  printf("0.002359\n");
-  printf("0.002077\n");
-  printf("0.001906\n");
-  printf("0.001791\n");
-  printf("0.001709\n");
-  printf("0.001647\n");
-  printf("0.001598\n");
-  printf("0.001559\n");
-
-  my_dgesv(CblasColMajor, size, 1, mat, size, NULL, vec, 1);
-  printf("\n----- Resultat obtenue -----\n\n");
-  affiche_vecteur(size, vec, 1, stdout);
-
-  // Libération mémoire des précédents vecteurs
-  free_vecteur(vec);
   free_matrice(mat);
 
   //////////////////////////////////////////////////////////////////////////////
