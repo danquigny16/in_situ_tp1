@@ -327,7 +327,6 @@ void dgetrf_seq_opti(const enum CBLAS_ORDER Order, int M, int N, double *A, int 
   int bloc_size = 30;
 
   int nb_iter_MK_min = MK_min / bloc_size;
-  int bloc_size_remain_MK_min = MK_min % bloc_size;
 
   int nb_iter_I = M / bloc_size;
   int bloc_size_remain_I = M % bloc_size;

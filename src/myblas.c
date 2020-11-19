@@ -894,6 +894,155 @@ void dgemm_seq_opti(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE tra
   }
 }
 
+/**
+Effectue : C <- alpha * (t)A * (t)B + beta * C
+Avec les tailles : -A : M*K
+                   -B : K*N
+                   -C : M*N
+@param Order : Indique si les matrices A, B et C sont stockées en CblasRowMajor ou en CblasColMajor
+@param TransA : Indique si on doit prendre la matrice A tel quel ou sa transposé
+@param TransB : Indique si on doit prendre la matrice B tel quel ou sa transposé
+@param M : Nombre de ligne de A / nombre de ligne de C
+@param N : nombre de colonne de B / nombre de colonne de C
+@param K : nombre de colonne de A / nombre de ligne de B
+@param Alpha : Scalaire alpha
+@param A : Matrice A
+@param lda : Leading dimension de A
+@param B : Matrice B
+@param ldb : Leading dimension de B
+@param beta : Scalaire beta
+@param C : Matrice C
+@param ldc : Leading dimension de C
+*/
+void dgemm_seq_simd(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE transA, const enum CBLAS_TRANSPOSE transB,
+              const int M, const int N, const int K,
+              const double alpha, const double *A, const int lda,
+              const double *B, const int ldb,
+              const double beta, double *C, const int ldc){
+  //////////////////////////////////////////////////////////////////////////////
+  // Pour cette fonction on suppose dans l'énoncé qu'on est en CblasColMajor, qu'on prend la transposé de A,
+  // qu'on laisse B tel quel, que l'on manipule des matrices carrés m*m, que alpha vaut 1 et beta 0,
+  // qu
+  if (Order != CblasColMajor){
+    printf("erreur dans \"dgemm_seq_opti\" : condition de l'énoncé non respecté\n");
+    exit(0);
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  // var boucle for
+  int m, n, k;
+
+  //////////////////////////////////////////////////////////////////////////////
+  // dgemm
+
+  //////////////////////////////////////////////////////////////////////////////
+  if (transA == CblasNoTrans){
+    if (transB == CblasNoTrans){
+      //////////////////////////////////////////////////////////////////////////
+
+      // On fera nos operations 4 par 4, on calcule les tailles dont on aura besoin
+      int M_size = M - (M % 4);
+
+      // On crée des veterude alpha et beta
+      __m256d alpha_tab = _mm256_set1_pd(alpha);
+      __m256d beta_tab = _mm256_set1_pd(beta);
+      __m256d tab = _mm256_set1_pd(0.0);
+
+      //////////////////////////////////////////////////////////////////////////
+
+      // Multiplication par beta
+      for (n = 0; n < N; n++){
+        double * C_COPY = C + n * ldc;
+
+        // Multiplication par beta 4 par 4
+        for (m = 0; m < M_size; m += 4, C_COPY += 4){
+          tab = _mm256_set_pd(C_COPY[3], C_COPY[2], C_COPY[1], C_COPY[0]);
+          tab = _mm256_mul_pd(beta_tab, tab);
+          C_COPY[0] = ((double *) &tab)[0];
+          C_COPY[1] = ((double *) &tab)[1];
+          C_COPY[2] = ((double *) &tab)[2];
+          C_COPY[3] = ((double *) &tab)[3];
+        }
+
+        // On n'oublie pas de faire le reste si C_size n'était pas un multiple de 4
+        for (m = M_size; m < M; m++){
+          C[m + ldc * n] *= beta;
+        }
+      }
+
+      //////////////////////////////////////////////////////////////////////////
+
+      // calcul de C = alpha * A * B
+      for (n = 0; n < N; n++){
+        for (k = 0; k < K; k++){
+          for (m = 0; m < M_size; m += 4){
+            // A_tab
+            const double * A_COPY = A + m + lda * k;
+            __m256d A_tab = _mm256_set_pd(A_COPY[3], A_COPY[2], A_COPY[1], A_COPY[0]);
+            // B_tab
+            __m256d B_tab = _mm256_set1_pd(B[k + ldb * n]);
+            // C_tab
+            double * C_COPY = C + m + ldc * n;
+            __m256d C_tab = _mm256_set_pd(C_COPY[3], C_COPY[2], C_COPY[1], C_COPY[0]);
+
+            // besoin d'une variable temporaire pour stocker une multiplication
+            __m256d tmp = _mm256_mul_pd(A_tab, B_tab);
+            // calcul du résultat final
+            C_tab = _mm256_fmadd_pd(alpha_tab, tmp, C_tab);
+            // On met bien le résultat dans C
+            C_COPY[0] = ((double *) &C_tab)[0];
+            C_COPY[1] = ((double *) &C_tab)[1];
+            C_COPY[2] = ((double *) &C_tab)[2];
+            C_COPY[3] = ((double *) &C_tab)[3];
+          }
+
+          // calcul du reste pour m
+          for (m = M_size; m < M; m++){
+            C[m + ldc * n] += alpha * A[m + lda * k] * B[k + ldb * n];
+          }
+        }
+      }
+
+      //////////////////////////////////////////////////////////////////////////
+    }
+  //////////////////////////////////////////////////////////////////////////////
+    else{
+      for (m = 0; m < M; m++){
+        for (n = 0; n < N; n++){
+          C[ldc * n + m] *= beta;
+          for (k = 0; k < K; k++){
+            C[ldc * n + m] += alpha * A[lda * k + m] * B[ldb * k + n];
+          }
+        }
+      }
+    }
+  }
+  //////////////////////////////////////////////////////////////////////////////
+  else{
+    if (transB == CblasNoTrans){
+      for (m = 0; m < M; m++){
+        for (n = 0; n < N; n++){
+          C[ldc * n + m] *= beta;
+          for (k = 0; k < K; k++){
+            C[ldc * n + m] += alpha * A[lda * m + k] * B[ldb * n + k];
+          }
+        }
+      }
+    }
+  //////////////////////////////////////////////////////////////////////////////
+    else{
+      for (m = 0; m < M; m++){
+        for (n = 0; n < N; n++){
+          C[ldc * n + m] *= beta;
+          for (k = 0; k < K; k++){
+            C[ldc * n + m] += alpha * A[lda * m + k] * B[ldb * k + n];
+          }
+        }
+      }
+    }
+  }
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Complétion de la bibliothèque blas

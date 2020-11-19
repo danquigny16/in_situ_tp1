@@ -60,6 +60,11 @@ void dgemm_seq_opti(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE tra
                     const double alpha, const double *A, const int lda,
                     const double *B, const int ldb,
                     const double beta, double *C, const int ldc);
+void dgemm_seq_simd(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE transA, const enum CBLAS_TRANSPOSE transB,
+                    const int M, const int N, const int K,
+                    const double alpha, const double *A, const int lda,
+                    const double *B, const int ldb,
+                    const double beta, double *C, const int ldc);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Complétion de la bibliothèque blas
